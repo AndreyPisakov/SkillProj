@@ -14,12 +14,37 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.apply {
-            btnMenu.setOnClickListener { Toast.makeText(this@MainActivity, R.string.menu, Toast.LENGTH_SHORT).show() }
-            btnFavor.setOnClickListener { Toast.makeText(this@MainActivity, R.string.favor, Toast.LENGTH_SHORT).show() }
-            btnLater.setOnClickListener { Toast.makeText(this@MainActivity, R.string.later, Toast.LENGTH_SHORT).show() }
-            btnSelections.setOnClickListener { Toast.makeText(this@MainActivity, R.string.selections, Toast.LENGTH_SHORT).show() }
-            btnSettings.setOnClickListener { Toast.makeText(this@MainActivity, R.string.settings, Toast.LENGTH_SHORT).show() }
+
+        initNavigation()
+    }
+
+    private fun initNavigation() {
+        binding.topAppBar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.settings -> {
+                    Toast.makeText(this, R.string.settings, Toast.LENGTH_SHORT).show()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        binding.bottomNavigation.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.favorites -> {
+                    Toast.makeText(this@MainActivity, R.string.favor, Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.watch_later -> {
+                    Toast.makeText(this@MainActivity, R.string.later, Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.selections -> {
+                    Toast.makeText(this@MainActivity, R.string.selections, Toast.LENGTH_SHORT).show()
+                    true
+                }
+                else -> false
+            }
         }
     }
 }
