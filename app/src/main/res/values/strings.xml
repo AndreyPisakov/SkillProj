@@ -7,4 +7,6 @@
     <string name="settings">настройки</string>
     <string name="disclaimer">Картинки взяты с pexels.com</string>
     <string name="page_title">Search it!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
