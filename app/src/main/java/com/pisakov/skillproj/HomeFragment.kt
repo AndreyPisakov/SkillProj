@@ -16,9 +16,9 @@ class HomeFragment : Fragment() {
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
 
     private val filmsDataBase = listOf(
-        Film("Star is born", R.drawable.poster_1, "This should be a description"),
-        Film("Kill Bill", R.drawable.poster_2, "This should be a description"),
-        Film("Bring him home", R.drawable.poster_3, "This should be a description"),
+        Film("Star is born", R.drawable.poster_1, "This should be a description", true),
+        Film("Kill Bill", R.drawable.poster_2, "This should be a description", true),
+        Film("Bring him home", R.drawable.poster_3, "This should be a description", true),
         Film("Hard candy", R.drawable.poster_4, "This should be a description"),
         Film("John Wick", R.drawable.poster_5, "This should be a description"),
         Film("Фото на память", R.drawable.poster_6, "This should be a description"),
