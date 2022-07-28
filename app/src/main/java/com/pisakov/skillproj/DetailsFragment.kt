@@ -23,7 +23,7 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentDetailsBinding.bind(view)
-        film = arguments?.get(MainActivity.FILM) as Film
+        film = DetailsFragmentArgs.fromBundle(requireArguments()).film
         binding.apply {
             detailsToolbar.title = film.title
             detailsPoster.setImageResource(film.poster)

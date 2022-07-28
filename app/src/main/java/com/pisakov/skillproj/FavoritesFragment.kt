@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pisakov.skillproj.databinding.FragmentFavoritesBinding
-import com.pisakov.skillproj.databinding.FragmentHomeBinding
 
 class FavoritesFragment : Fragment() {
 
@@ -20,10 +20,10 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentFavoritesBinding.bind(view)
-        initRV()
+        initRV(view)
     }
 
-    private fun initRV() {
+    private fun initRV(view: View) {
         val favoritesList: List<Film> = listOf(
             Film("Star is born", R.drawable.poster_1, "This should be a description", true),
             Film("Kill Bill", R.drawable.poster_2, "This should be a description", true),
@@ -32,7 +32,8 @@ class FavoritesFragment : Fragment() {
             val filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: Film) {
-                        (requireActivity() as MainActivity).launchDetailsFragment(film)
+                        view.findNavController()
+                            .navigate(FavoritesFragmentDirections.actionFavoritesFragmentToDetailsFragment(film))
                     }
                 })
             adapter = filmsAdapter

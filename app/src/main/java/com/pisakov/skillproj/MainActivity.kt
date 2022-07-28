@@ -2,7 +2,10 @@ package com.pisakov.skillproj
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.widget.Toast
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.pisakov.skillproj.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -15,28 +18,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initNavigation()
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragment_placeholder, HomeFragment())
-            .addToBackStack(null)
-            .commit()
+
+        val navController = findNavController(R.id.myNavHostFragment)
+        binding.bottomNavigation.setupWithNavController(navController)
     }
 
-    fun launchDetailsFragment(film: Film) {
-        val bundle = Bundle()
-        bundle.putParcelable(FILM, film)
-        val fragment = DetailsFragment()
-        fragment.arguments = bundle
-
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_placeholder, fragment)
-            .addToBackStack(null)
-            .commit()
-    }
-
-    companion object {
-        const val FILM = "film"
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        return super.onCreateOptionsMenu(menu)
     }
 
     private fun initNavigation() {
@@ -52,14 +40,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigation.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.favorites -> {
-                    supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.fragment_placeholder, FavoritesFragment())
-                        .addToBackStack(null)
-                        .commit()
-                    true
-                }
                 R.id.watch_later -> {
                     Toast.makeText(this@MainActivity, R.string.later, Toast.LENGTH_SHORT).show()
                     true
