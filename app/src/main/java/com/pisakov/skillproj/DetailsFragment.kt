@@ -32,7 +32,6 @@ class DetailsFragment : Fragment() {
         isFavorite()
         addToFavorite()
         share()
-
     }
 
     private fun addToFavorite() {

@@ -23,10 +23,6 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setupWithNavController(navController)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return super.onCreateOptionsMenu(menu)
-    }
-
     private fun initNavigation() {
         binding.topAppBar.setOnMenuItemClickListener {
             when (it.itemId) {
