@@ -2,6 +2,7 @@ package com.pisakov.skillproj
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.pisakov.skillproj.databinding.FilmItemBinding
 
 class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -10,8 +11,11 @@ class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(film: Film) {
         binding.apply {
             title.text = film.title
-            poster.setImageResource(film.poster)
             description.text = film.description
+            Glide.with(itemView)
+                .load(film.poster)
+                .centerCrop()
+                .into(poster)
         }
     }
 }
