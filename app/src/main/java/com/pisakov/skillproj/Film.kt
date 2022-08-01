@@ -6,6 +6,7 @@ import android.os.Parcelable
 import androidx.annotation.RequiresApi
 
 data class Film(
+    val filmId: Int,
     val title: String,
     val poster: Int,
     val description: String,
@@ -14,6 +15,7 @@ data class Film(
 
     @RequiresApi(Build.VERSION_CODES.Q)
     constructor(parcel: Parcel) : this(
+        parcel.readInt(),
         parcel.readString().toString(),
         parcel.readInt(),
         parcel.readString().toString(),
@@ -25,6 +27,7 @@ data class Film(
     }
 
     override fun writeToParcel(p0: Parcel?, p1: Int) {
+        p0?.writeInt(filmId)
         p0?.writeString(title)
         p0?.writeInt(poster)
         p0?.writeString(description)
