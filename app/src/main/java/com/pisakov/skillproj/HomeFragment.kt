@@ -24,14 +24,14 @@ class HomeFragment : Fragment() {
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
 
     private val filmsDataBase = listOf(
-        Film("Star is born", R.drawable.poster_1, "This should be a description", true),
-        Film("Kill Bill", R.drawable.poster_2, "This should be a description", true),
-        Film("Bring him home", R.drawable.poster_3, "This should be a description", true),
-        Film("Hard candy", R.drawable.poster_4, "This should be a description"),
-        Film("John Wick", R.drawable.poster_5, "This should be a description"),
-        Film("Фото на память", R.drawable.poster_6, "This should be a description"),
-        Film("Color out of space", R.drawable.poster_7, "This should be a description"),
-        Film("Маша", R.drawable.poster_8, "This should be a description"))
+        Film(1,"Star is born", R.drawable.poster_1, "This should be a description", true),
+        Film(2,"Kill Bill", R.drawable.poster_2, "This should be a description", true),
+        Film(3,"Bring him home", R.drawable.poster_3, "This should be a description", true),
+        Film(4,"Hard candy", R.drawable.poster_4, "This should be a description"),
+        Film(5,"John Wick", R.drawable.poster_5, "This should be a description"),
+        Film(6,"Фото на память", R.drawable.poster_6, "This should be a description"),
+        Film(7,"Color out of space", R.drawable.poster_7, "This should be a description"),
+        Film(8,"Маша", R.drawable.poster_8, "This should be a description"))
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,13 +65,13 @@ class HomeFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean = true
             override fun onQueryTextChange(newText: String): Boolean {
                 if (newText.isEmpty()) {
-                    filmsAdapter.addItems(filmsDataBase)
+                    filmsAdapter.submitList(filmsDataBase)
                     return true
                 }
                 val result = filmsDataBase.filter {
                     it.title.lowercase(Locale.getDefault()).contains(newText.lowercase(Locale.getDefault()))
                 }
-                filmsAdapter.addItems(result)
+                filmsAdapter.submitList(result)
                 return true
             }
         })
@@ -91,6 +91,6 @@ class HomeFragment : Fragment() {
             val decorator = TopSpacingItemDecoration(8)
             addItemDecoration(decorator)
         }
-        filmsAdapter.addItems(filmsDataBase)
+        filmsAdapter.submitList(filmsDataBase)
     }
 }

@@ -25,22 +25,21 @@ class FavoritesFragment : Fragment() {
 
     private fun initRV(view: View) {
         val favoritesList: List<Film> = listOf(
-            Film("Star is born", R.drawable.poster_1, "This should be a description", true),
-            Film("Kill Bill", R.drawable.poster_2, "This should be a description", true),
-            Film("Bring him home", R.drawable.poster_3, "This should be a description", true))
+            Film(1,"Star is born", R.drawable.poster_1, "This should be a description", true),
+            Film(2,"Kill Bill", R.drawable.poster_2, "This should be a description", true),
+            Film(3,"Bring him home", R.drawable.poster_3, "This should be a description", true))
         binding.favoritesRecycler.apply {
             val filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
                     override fun click(film: Film) {
-                        view.findNavController()
-                            .navigate(FavoritesFragmentDirections.actionFavoritesFragmentToDetailsFragment(film))
+                        view.findNavController().navigate(FavoritesFragmentDirections.actionFavoritesFragmentToDetailsFragment(film))
                     }
                 })
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(requireContext())
             val decorator = TopSpacingItemDecoration(8)
             addItemDecoration(decorator)
-            filmsAdapter.addItems(favoritesList)
+            filmsAdapter.submitList(favoritesList)
         }
     }
 }
