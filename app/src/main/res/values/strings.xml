@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">SkillProj</string>
-    <string name="favor">избранное</string>
-    <string name="later">посмотреть позже</string>
-    <string name="selections">подборки</string>
-    <string name="settings">настройки</string>
+    <string name="favor">Избранное</string>
+    <string name="later">Посмотреть позже</string>
+    <string name="selections">Подборки</string>
+    <string name="settings">Настройки</string>
     <string name="page_title">Search it!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
