@@ -33,19 +33,5 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
-        binding.bottomNavigation.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.watch_later -> {
-                    Toast.makeText(this@MainActivity, R.string.later, Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.selections -> {
-                    Toast.makeText(this@MainActivity, R.string.selections, Toast.LENGTH_SHORT).show()
-                    true
-                }
-                else -> false
-            }
-        }
     }
 }

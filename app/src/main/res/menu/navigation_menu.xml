@@ -3,17 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_favorite"
+        android:title="@string/favor"
+        app:showAsAction="withText"/>
+    <item
         android:id="@+id/favoritesFragment"
         android:icon="@drawable/ic_favorite"
         android:title="@string/favor"
         app:showAsAction="withText"/>
     <item
-        android:id="@+id/watch_later"
+        android:id="@+id/laterFragment"
         android:icon="@drawable/ic_time"
         android:title="@string/later"
         app:showAsAction="withText"/>
     <item
-        android:id="@+id/selections"
+        android:id="@+id/selectionsFragment"
         android:icon="@drawable/ic_video"
         android:title="@string/selections"
         app:showAsAction="withText"/>

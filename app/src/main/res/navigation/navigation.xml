@@ -32,4 +32,14 @@
             android:id="@+id/action_favoritesFragment_to_detailsFragment"
             app:destination="@id/detailsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/laterFragment"
+        android:name="com.pisakov.skillproj.LaterFragment"
+        android:label="fragment_later"
+        tools:layout="@layout/fragment_later" />
+    <fragment
+        android:id="@+id/selectionsFragment"
+        android:name="com.pisakov.skillproj.SelectionsFragment"
+        android:label="fragment_selections"
+        tools:layout="@layout/fragment_selections" />
 </navigation>
