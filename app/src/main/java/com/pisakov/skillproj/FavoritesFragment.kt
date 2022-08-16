@@ -38,8 +38,7 @@ class FavoritesFragment : Fragment() {
                 })
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            val decorator = TopSpacingItemDecoration(8)
-            addItemDecoration(decorator)
+            addItemDecoration(TopSpacingItemDecoration(8))
             filmsAdapter.submitList(favoritesList)
         }
     }

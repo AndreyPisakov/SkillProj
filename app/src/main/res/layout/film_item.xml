@@ -5,9 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
-    android:elevation="1dp"
-    app:cardCornerRadius="10dp">
+    android:layout_height="@dimen/dimen_main_rv_image"
+    android:layout_margin="4dp"
+    app:cardCornerRadius="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
 
         <ImageView
             android:id="@+id/poster"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/dimen_main_rv_image"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             app:layout_constraintLeft_toLeftOf="parent"

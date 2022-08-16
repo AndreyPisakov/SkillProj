@@ -36,13 +36,11 @@ class DetailsFragment : Fragment() {
 
     private fun addToFavorite() {
         binding.detailsFabFavorites.setOnClickListener{
-            if (!film.isInFavorites) {
-                binding.detailsFabFavorites.setImageResource(R.drawable.ic_favorite)
-                film.isInFavorites = true
-            } else {
-                binding.detailsFabFavorites.setImageResource(R.drawable.ic_favorite_border)
-                film.isInFavorites = false
-            }
+            binding.detailsFabFavorites.setImageResource(
+                if (!film.isInFavorites) R.drawable.ic_favorite
+                else R.drawable.ic_favorite_border
+            )
+            film.isInFavorites = !film.isInFavorites
         }
     }
 

@@ -10,6 +10,7 @@ import kotlin.math.roundToInt
 
 object AnimationHelper {
     private const val MENU_ITEMS = 4
+    private const val ANIM_DURATION: Long = 500
 
     fun performFragmentCircularRevealAnimation(rootView: View, activity: Activity, position: Int) {
         Executors.newSingleThreadExecutor().execute {
@@ -26,7 +27,7 @@ object AnimationHelper {
                         val endRadius = hypot(rootView.width.toDouble(), rootView.height.toDouble())
 
                         ViewAnimationUtils.createCircularReveal(rootView, x, y, startRadius.toFloat(), endRadius.toFloat()).apply {
-                            duration = 500
+                            duration = ANIM_DURATION
                             interpolator = AccelerateDecelerateInterpolator()
                             start()
                         }
