@@ -28,6 +28,7 @@ class DetailsFragment : Fragment() {
             detailsToolbar.title = film.title
             detailsPoster.setImageResource(film.poster)
             detailsDescription.text = film.description
+            ratingView.setProgress(film.rating)
         }
         isFavorite()
         addToFavorite()

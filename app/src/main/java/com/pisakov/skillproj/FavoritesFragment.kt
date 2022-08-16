@@ -26,9 +26,9 @@ class FavoritesFragment : Fragment() {
 
     private fun initRV(view: View) {
         val favoritesList: List<Film> = listOf(
-            Film(1,"Star is born", R.drawable.poster_1, "This should be a description", true),
-            Film(2,"Kill Bill", R.drawable.poster_2, "This should be a description", true),
-            Film(3,"Bring him home", R.drawable.poster_3, "This should be a description", true))
+            Film(1,"Star is born", R.drawable.poster_1, 2.2f, "This should be a description", true),
+            Film(2,"Kill Bill", R.drawable.poster_2, 9.9f,"This should be a description", true),
+            Film(3,"Bring him home", R.drawable.poster_3, 4.7f,"This should be a description", true))
         binding.favoritesRecycler.apply {
             val filmsAdapter =
                 FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {

@@ -9,6 +9,7 @@ data class Film(
     val filmId: Int,
     val title: String,
     val poster: Int,
+    val rating: Float,
     val description: String,
     var isInFavorites: Boolean = false
 ) : Parcelable {
@@ -18,6 +19,7 @@ data class Film(
         parcel.readInt(),
         parcel.readString().toString(),
         parcel.readInt(),
+        parcel.readFloat(),
         parcel.readString().toString(),
         parcel.readBoolean()
     )
@@ -30,6 +32,7 @@ data class Film(
         p0?.writeInt(filmId)
         p0?.writeString(title)
         p0?.writeInt(poster)
+        p0?.writeFloat(rating)
         p0?.writeString(description)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
             p0?.writeBoolean(isInFavorites)
