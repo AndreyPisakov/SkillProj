@@ -33,6 +33,7 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : 
             binding.apply {
                 title.text = film.title
                 description.text = film.description
+                ratingView.setProgress(film.rating)
                 Glide.with(itemView)
                     .load(film.poster)
                     .centerCrop()

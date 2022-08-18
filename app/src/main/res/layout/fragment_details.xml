@@ -6,6 +6,17 @@
     android:fitsSystemWindows="true"
     tools:context=".DetailsFragment">
 
+    <com.pisakov.skillproj.RatingView
+        android:id="@+id/rating_view"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:translationZ="11dp"
+        android:layout_margin="8dp"
+        android:layout_gravity="right|bottom"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -42,7 +53,6 @@
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/details_fab"
