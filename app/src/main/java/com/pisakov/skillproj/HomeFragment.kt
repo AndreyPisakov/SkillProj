@@ -43,6 +43,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun search() {
+        binding.searchView.setOnClickListener { binding.searchView.isIconified = false }
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean = true
             override fun onQueryTextChange(newText: String): Boolean {
