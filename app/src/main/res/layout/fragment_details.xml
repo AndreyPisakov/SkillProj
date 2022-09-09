@@ -12,7 +12,7 @@
         android:layout_height="50dp"
         android:translationZ="11dp"
         android:layout_margin="8dp"
-        android:layout_gravity="right|bottom"
+        android:layout_gravity="end|bottom"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
@@ -63,7 +63,7 @@
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|right"
         app:srcCompat="@drawable/ic_share"
-        android:tint="@android:color/white"/>
+        app:tint="@android:color/white"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/details_fab_favorites"
