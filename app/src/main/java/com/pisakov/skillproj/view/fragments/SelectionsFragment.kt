@@ -1,11 +1,13 @@
-package com.pisakov.skillproj
+package com.pisakov.skillproj.view.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.pisakov.skillproj.R
 import com.pisakov.skillproj.databinding.FragmentSelectionsBinding
+import com.pisakov.skillproj.utils.AnimationHelper
 
 class SelectionsFragment : Fragment() {
 

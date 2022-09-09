@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.pisakov.skillproj.HomeFragment"
+        android:name="com.pisakov.skillproj.view.fragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -16,16 +16,16 @@
     </fragment>
     <fragment
         android:id="@+id/detailsFragment"
-        android:name="com.pisakov.skillproj.DetailsFragment"
+        android:name="com.pisakov.skillproj.view.fragments.DetailsFragment"
         android:label="fragment_details"
         tools:layout="@layout/fragment_details" >
         <argument
             android:name="film"
-            app:argType="com.pisakov.skillproj.Film" />
+            app:argType="com.pisakov.skillproj.domain.Film" />
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="com.pisakov.skillproj.FavoritesFragment"
+        android:name="com.pisakov.skillproj.view.fragments.FavoritesFragment"
         android:label="fragment_favorites"
         tools:layout="@layout/fragment_favorites" >
         <action
@@ -34,12 +34,12 @@
     </fragment>
     <fragment
         android:id="@+id/laterFragment"
-        android:name="com.pisakov.skillproj.LaterFragment"
+        android:name="com.pisakov.skillproj.view.fragments.LaterFragment"
         android:label="fragment_later"
         tools:layout="@layout/fragment_later" />
     <fragment
         android:id="@+id/selectionsFragment"
-        android:name="com.pisakov.skillproj.SelectionsFragment"
+        android:name="com.pisakov.skillproj.view.fragments.SelectionsFragment"
         android:label="fragment_selections"
         tools:layout="@layout/fragment_selections" />
 </navigation>

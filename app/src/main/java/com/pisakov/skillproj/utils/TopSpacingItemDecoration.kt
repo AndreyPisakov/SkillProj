@@ -1,4 +1,4 @@
-package com.pisakov.skillproj
+package com.pisakov.skillproj.utils
 
 import android.content.res.Resources
 import android.graphics.Rect

@@ -1,4 +1,4 @@
-package com.pisakov.skillproj
+package com.pisakov.skillproj.view.rv_adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,9 +7,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.pisakov.skillproj.R
 import com.pisakov.skillproj.databinding.FilmItemBinding
+import com.pisakov.skillproj.domain.Film
 
-class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : ListAdapter<Film, FilmListRecyclerAdapter.FilmViewHolder>(FilmsDiffCallback()) {
+class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : ListAdapter<Film, FilmListRecyclerAdapter.FilmViewHolder>(
+    FilmsDiffCallback()
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmViewHolder =
         FilmViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.film_item, parent, false))

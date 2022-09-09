@@ -11,7 +11,7 @@
     tools:visibility="visible"
     android:padding="8dp"
     android:background="@drawable/background_main"
-    tools:context=".HomeFragment">
+    tools:context=".view.fragments.HomeFragment">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"

@@ -1,4 +1,4 @@
-package com.pisakov.skillproj
+package com.pisakov.skillproj.domain
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

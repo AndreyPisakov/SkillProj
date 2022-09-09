@@ -1,4 +1,4 @@
-package com.pisakov.skillproj
+package com.pisakov.skillproj.view.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,37 +6,38 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.pisakov.skillproj.view.rv_adapters.FilmListRecyclerAdapter
+import com.pisakov.skillproj.R
+import com.pisakov.skillproj.utils.TopSpacingItemDecoration
 import com.pisakov.skillproj.databinding.FragmentHomeBinding
+import com.pisakov.skillproj.domain.Film
+import com.pisakov.skillproj.utils.AnimationHelper
+import com.pisakov.skillproj.viewmodel.HomeFragmentViewModel
 import java.util.*
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
-
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
-
-    private val filmsDataBase = listOf(
-        Film(1,"Star is born", R.drawable.poster_1, 2.2f, "This should be a description", true),
-        Film(2,"Kill Bill", R.drawable.poster_2, 9.9f,"This should be a description", true),
-        Film(3,"Bring him home", R.drawable.poster_3, 4.7f,"This should be a description", true),
-        Film(4,"Hard candy", R.drawable.poster_4, 6.3f,"This should be a description"),
-        Film(5,"John Wick", R.drawable.poster_5, 8.5f, "This should be a description"),
-        Film(6,"Фото на память", R.drawable.poster_6, 7.7f, "This should be a description"),
-        Film(7,"Color out of space", R.drawable.poster_7, 9.1f, "This should be a description"),
-        Film(8,"Маша", R.drawable.poster_8, 5.6f, "This should be a description"))
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    private val viewModel by lazy {
+        ViewModelProvider.NewInstanceFactory().create(HomeFragmentViewModel::class.java)
     }
+    private var filmsDataBase = listOf<Film>()
+        set(value) {
+            if (field == value) return
+            field = value
+            filmsAdapter.submitList(field)
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentHomeBinding.bind(view)
+        viewModel.filmListLiveData.observe(viewLifecycleOwner){
+            filmsDataBase = it
+        }
         AnimationHelper.performFragmentCircularRevealAnimation(binding.homeFragmentRoot, requireActivity(), 1)
         initRV(view)
         search()
@@ -62,7 +63,7 @@ class HomeFragment : Fragment() {
 
     private fun initRV(view: View) {
         binding.mainRecycler.apply {
-            filmsAdapter = FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener{
+            filmsAdapter = FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
                 override fun click(film: Film) {
                     view.findNavController()
                         .navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(film))

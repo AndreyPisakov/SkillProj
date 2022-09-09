@@ -1,10 +1,10 @@
-package com.pisakov.skillproj
+package com.pisakov.skillproj.view.customViews
 
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
-import java.util.*
+import com.pisakov.skillproj.R
 import kotlin.math.min
 
 class RatingView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null) : View(context, attributeSet) {
