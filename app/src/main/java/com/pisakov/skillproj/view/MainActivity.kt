@@ -1,11 +1,10 @@
-package com.pisakov.skillproj
+package com.pisakov.skillproj.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.pisakov.skillproj.R
 import com.pisakov.skillproj.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

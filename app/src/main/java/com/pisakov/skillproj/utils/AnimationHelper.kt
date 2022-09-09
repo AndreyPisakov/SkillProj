@@ -1,4 +1,4 @@
-package com.pisakov.skillproj
+package com.pisakov.skillproj.utils
 
 import android.app.Activity
 import android.view.View

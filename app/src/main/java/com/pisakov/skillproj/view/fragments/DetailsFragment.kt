@@ -1,4 +1,4 @@
-package com.pisakov.skillproj
+package com.pisakov.skillproj.view.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.pisakov.skillproj.R
 import com.pisakov.skillproj.databinding.FragmentDetailsBinding
+import com.pisakov.skillproj.domain.Film
 
 class DetailsFragment : Fragment() {
 

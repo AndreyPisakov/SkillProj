@@ -13,6 +13,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
+import com.pisakov.skillproj.view.MainActivity
+import com.pisakov.skillproj.view.rv_adapters.FilmListRecyclerAdapter
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.junit.Rule

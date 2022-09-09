@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/dimen_main_rv_image">
 
-    <com.pisakov.skillproj.RatingView
+    <com.pisakov.skillproj.view.customViews.RatingView
         android:id="@+id/rating_view"
         android:layout_width="50dp"
         android:layout_height="50dp"
