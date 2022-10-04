@@ -32,12 +32,14 @@ class HomeFragment : Fragment() {
             filmsAdapter.submitList(field)
         }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_home, container, false)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentHomeBinding.bind(view)
-        Log.d("MyLog", "fragment")
         viewModel.filmListLiveData.observe(viewLifecycleOwner){
-            Log.d("MyLog", "follow")
             filmsDataBase = it
         }
         AnimationHelper.performFragmentCircularRevealAnimation(binding.homeFragmentRoot, requireActivity(), 1)
@@ -70,6 +72,11 @@ class HomeFragment : Fragment() {
                     view.findNavController()
                         .navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(film))
                 }
+            }, object : FilmListRecyclerAdapter.Paging {
+                override fun loadNewPage() {
+                    viewModel.loadNewPage()
+                }
+
             })
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(requireContext())

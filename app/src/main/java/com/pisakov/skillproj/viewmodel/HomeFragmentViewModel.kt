@@ -1,6 +1,5 @@
 package com.pisakov.skillproj.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,25 +14,25 @@ class HomeFragmentViewModel : ViewModel() {
 
     private var interactor: Interactor = App.instance.interactor
 
-//    init {
-//        val films = interactor.getFilmsDB()
-//        _filmListLiveData.postValue(films)
-//    }
+    private var page = 1
 
     init {
-        Log.d("MyLog", "vm init")
-        interactor.getFilmsFromApi(1, object : ApiCallback {
-            override fun onSuccess(films: List<Film>) {
-                _filmListLiveData.postValue(films)
-                Log.d("MyLog", "success")
-            }
-
-            override fun onFailure() {
-                Log.d("MyLog", "error")
-
-            }
-        })
+        loadNewPage()
     }
+
+    fun loadNewPage() {
+        interactor.getFilmsFromApi(page, object : ApiCallback {
+            override fun onSuccess(films: List<Film>) {
+                val list = mutableListOf<Film>()
+                _filmListLiveData.value?.let { list.addAll(it) }
+                list.addAll(films)
+                _filmListLiveData.postValue(list)
+            }
+            override fun onFailure() {}
+        })
+        page++
+    }
+
 
     interface ApiCallback {
         fun onSuccess(films: List<Film>)

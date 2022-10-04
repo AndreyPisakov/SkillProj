@@ -12,7 +12,7 @@ import com.pisakov.skillproj.databinding.FilmItemBinding
 import com.pisakov.skillproj.data.ApiConstants
 import com.pisakov.skillproj.domain.Film
 
-class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : ListAdapter<Film, FilmListRecyclerAdapter.FilmViewHolder>(
+class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener, private val paging: Paging) : ListAdapter<Film, FilmListRecyclerAdapter.FilmViewHolder>(
     FilmsDiffCallback()
 ) {
 
@@ -20,6 +20,8 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : 
         FilmViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.film_item, parent, false))
 
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
+        if (position == itemCount - 3)
+            paging.loadNewPage()
         val item = getItem(position)
         holder.bind(item)
         holder.binding.itemContainer.setOnClickListener {
@@ -29,6 +31,10 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener) : 
 
     interface OnItemClickListener {
         fun click(film: Film)
+    }
+
+    interface Paging {
+        fun loadNewPage()
     }
 
     class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
