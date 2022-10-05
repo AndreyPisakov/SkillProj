@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.pisakov.skillproj.R
 import com.pisakov.skillproj.databinding.FragmentDetailsBinding
+import com.pisakov.skillproj.data.ApiConstants
 import com.pisakov.skillproj.domain.Film
 
 class DetailsFragment : Fragment() {
@@ -28,9 +30,12 @@ class DetailsFragment : Fragment() {
         film = DetailsFragmentArgs.fromBundle(requireArguments()).film
         binding.apply {
             detailsToolbar.title = film.title
-            detailsPoster.setImageResource(film.poster)
+            Glide.with(view)
+                .load(ApiConstants.IMAGES_URL + "w780" + film.poster)
+                .centerCrop()
+                .into(detailsPoster)
             detailsDescription.text = film.description
-            ratingView.setProgress(film.rating)
+            ratingView.setProgress(film.rating.toFloat())
         }
         isFavorite()
         addToFavorite()

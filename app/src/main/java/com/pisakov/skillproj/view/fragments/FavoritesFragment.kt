@@ -1,6 +1,7 @@
 package com.pisakov.skillproj.view.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -30,22 +31,22 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun initRV(view: View) {
-        val favoritesList: List<Film> = listOf(
-            Film(1,"Star is born", R.drawable.poster_1, 2.2f, "This should be a description", true),
-            Film(2,"Kill Bill", R.drawable.poster_2, 9.9f,"This should be a description", true),
-            Film(3,"Bring him home", R.drawable.poster_3, 4.7f,"This should be a description", true)
-        )
-        binding.favoritesRecycler.apply {
-            val filmsAdapter =
-                FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
-                    override fun click(film: Film) {
-                        view.findNavController().navigate(FavoritesFragmentDirections.actionFavoritesFragmentToDetailsFragment(film))
-                    }
-                })
-            adapter = filmsAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-            addItemDecoration(TopSpacingItemDecoration(8))
-            filmsAdapter.submitList(favoritesList)
-        }
+//        val favoritesList: List<Film> = listOf(
+//            Film(1,"Star is born", R.drawable.poster_1, 2.2f, "This should be a description", true),
+//            Film(2,"Kill Bill", R.drawable.poster_2, 9.9f,"This should be a description", true),
+//            Film(3,"Bring him home", R.drawable.poster_3, 4.7f,"This should be a description", true)
+//        )
+//        binding.favoritesRecycler.apply {
+//            val filmsAdapter =
+//                FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
+//                    override fun click(film: Film) {
+//                        view.findNavController().navigate(FavoritesFragmentDirections.actionFavoritesFragmentToDetailsFragment(film))
+//                    }
+//                })
+//            adapter = filmsAdapter
+//            layoutManager = LinearLayoutManager(requireContext())
+//            addItemDecoration(TopSpacingItemDecoration(8))
+//            filmsAdapter.submitList(favoritesList)
+//        }
     }
 }
