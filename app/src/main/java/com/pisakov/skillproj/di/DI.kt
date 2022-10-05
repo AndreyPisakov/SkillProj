@@ -30,6 +30,7 @@ object DI {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build()
+
             retrofit.create(TmdbApi::class.java)
         }
         single { Interactor(get(), get()) }

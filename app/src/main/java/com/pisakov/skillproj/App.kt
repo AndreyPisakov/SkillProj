@@ -16,7 +16,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 class App : Application() {
-    lateinit var interactor: Interactor
 
     override fun onCreate() {
         super.onCreate()
@@ -25,10 +24,5 @@ class App : Application() {
             androidLogger()
             modules(listOf(DI.mainModule))
         }
-    }
-
-    companion object {
-        lateinit var instance: App
-            private set
     }
 }
