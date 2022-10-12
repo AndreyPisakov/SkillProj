@@ -1,13 +1,11 @@
 package com.pisakov.skillproj.view.fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pisakov.skillproj.view.rv_adapters.FilmListRecyclerAdapter
@@ -17,14 +15,16 @@ import com.pisakov.skillproj.databinding.FragmentHomeBinding
 import com.pisakov.skillproj.domain.Film
 import com.pisakov.skillproj.utils.AnimationHelper
 import com.pisakov.skillproj.viewmodel.HomeFragmentViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
-    private val viewModel by lazy {
-        ViewModelProvider.NewInstanceFactory().create(HomeFragmentViewModel::class.java)
-    }
+    @Inject lateinit var viewModel: HomeFragmentViewModel
+
     private var filmsDataBase = listOf<Film>()
         set(value) {
             if (field == value) return
