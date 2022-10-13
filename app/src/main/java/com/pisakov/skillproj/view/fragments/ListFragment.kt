@@ -9,20 +9,19 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.pisakov.skillproj.view.rv_adapters.FilmListRecyclerAdapter
 import com.pisakov.skillproj.R
-import com.pisakov.skillproj.utils.TopSpacingItemDecoration
-import com.pisakov.skillproj.databinding.FragmentHomeBinding
+import com.pisakov.skillproj.databinding.FragmentListBinding
 import com.pisakov.skillproj.domain.Film
-import com.pisakov.skillproj.utils.AnimationHelper
-import com.pisakov.skillproj.viewmodel.HomeFragmentViewModel
+import com.pisakov.skillproj.utils.TopSpacingItemDecoration
+import com.pisakov.skillproj.view.rv_adapters.FilmListRecyclerAdapter
+import com.pisakov.skillproj.viewmodel.ListFragmentViewModel
 import java.util.*
 
-class HomeFragment : Fragment() {
-    private lateinit var binding: FragmentHomeBinding
+class ListFragment : Fragment() {
+    private lateinit var binding: FragmentListBinding
     private lateinit var filmsAdapter: FilmListRecyclerAdapter
     private val viewModel by lazy {
-        ViewModelProvider.NewInstanceFactory().create(HomeFragmentViewModel::class.java)
+        ViewModelProvider.NewInstanceFactory().create(ListFragmentViewModel::class.java)
     }
     private var filmsDataBase = listOf<Film>()
         set(value) {
@@ -32,17 +31,19 @@ class HomeFragment : Fragment() {
         }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        return inflater.inflate(R.layout.fragment_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentHomeBinding.bind(view)
+        binding = FragmentListBinding.bind(view)
+        val selectionName = ListFragmentArgs.fromBundle(requireArguments()).selectionName
+        viewModel.page = 1
+        viewModel.loadList(selectionName)
         viewModel.filmListLiveData.observe(viewLifecycleOwner){
             filmsDataBase = it
         }
-        AnimationHelper.performFragmentCircularRevealAnimation(binding.homeFragmentRoot, requireActivity(), 1)
-        initRV(view)
+        initRV(view, selectionName)
         search()
     }
 
@@ -64,16 +65,16 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun initRV(view: View) {
+    private fun initRV(view: View, selectionName: String) {
         binding.mainRecycler.apply {
             filmsAdapter = FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
                 override fun click(film: Film) {
                     view.findNavController()
-                        .navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(film))
+                        .navigate(ListFragmentDirections.actionListFragmentToDetailsFragment(film))
                 }
             }, object : FilmListRecyclerAdapter.Paging {
                 override fun loadNewPage() {
-                    viewModel.loadNewPage()
+                    viewModel.loadList(selectionName)
                 }
 
             })
