@@ -41,5 +41,21 @@
         android:id="@+id/selectionsFragment"
         android:name="com.pisakov.skillproj.view.fragments.SelectionsFragment"
         android:label="fragment_selections"
-        tools:layout="@layout/fragment_selections" />
+        tools:layout="@layout/fragment_selections" >
+        <action
+            android:id="@+id/action_selectionsFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="com.pisakov.skillproj.view.fragments.ListFragment"
+        android:label="fragment_list"
+        tools:layout="@layout/fragment_list" >
+        <argument
+            android:name="selection_name"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_listFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
 </navigation>

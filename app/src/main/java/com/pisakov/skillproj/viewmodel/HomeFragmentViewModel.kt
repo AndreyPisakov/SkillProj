@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.pisakov.skillproj.App
 import com.pisakov.skillproj.domain.Film
 import com.pisakov.skillproj.domain.Interactor
+import com.pisakov.skillproj.utils.Selections
 
 class HomeFragmentViewModel : ViewModel() {
     private val _filmListLiveData = MutableLiveData<List<Film>>()
@@ -21,7 +22,7 @@ class HomeFragmentViewModel : ViewModel() {
     }
 
     fun loadNewPage() {
-        interactor.getFilmsFromApi(page, object : ApiCallback {
+        interactor.getListFilmsFromApi(Selections.popular, page, object : Interactor.ApiCallback {
             override fun onSuccess(films: List<Film>) {
                 val list = mutableListOf<Film>()
                 _filmListLiveData.value?.let { list.addAll(it) }
@@ -33,9 +34,4 @@ class HomeFragmentViewModel : ViewModel() {
         page++
     }
 
-
-    interface ApiCallback {
-        fun onSuccess(films: List<Film>)
-        fun onFailure()
-    }
 }
