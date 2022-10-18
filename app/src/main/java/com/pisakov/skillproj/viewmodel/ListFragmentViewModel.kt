@@ -7,15 +7,21 @@ import com.pisakov.skillproj.App
 import com.pisakov.skillproj.domain.Film
 import com.pisakov.skillproj.domain.Interactor
 import com.pisakov.skillproj.utils.Selections
+import javax.inject.Inject
 
 class ListFragmentViewModel : ViewModel() {
     private val _filmListLiveData = MutableLiveData<List<Film>>()
     val filmListLiveData: LiveData<List<Film>>
         get() = _filmListLiveData
 
-    private var interactor: Interactor = App.instance.interactor
+    @Inject
+    lateinit var interactor: Interactor
 
     var page: Int = 1
+
+    init {
+        App.instance.dagger.inject(this)
+    }
 
     private val callback = object : Interactor.ApiCallback {
         override fun onSuccess(films: List<Film>) {

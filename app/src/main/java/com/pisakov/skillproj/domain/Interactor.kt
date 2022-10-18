@@ -1,6 +1,7 @@
 package com.pisakov.skillproj.domain
 
 import com.pisakov.skillproj.data.API
+import com.pisakov.skillproj.data.MainRepository
 import com.pisakov.skillproj.data.TmdbApi
 import com.pisakov.skillproj.data.TmdbResultsDto
 import com.pisakov.skillproj.utils.Converter
@@ -9,8 +10,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class Interactor(//private val repo: MainRepository,
-                 private val retrofitService: TmdbApi) {
+class Interactor(private val repo: MainRepository, private val retrofitService: TmdbApi) {
 
     interface ApiCallback {
         fun onSuccess(films: List<Film>)
