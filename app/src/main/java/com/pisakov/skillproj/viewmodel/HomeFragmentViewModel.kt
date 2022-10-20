@@ -7,17 +7,20 @@ import com.pisakov.skillproj.App
 import com.pisakov.skillproj.domain.Film
 import com.pisakov.skillproj.domain.Interactor
 import com.pisakov.skillproj.utils.Selections
+import javax.inject.Inject
 
 class HomeFragmentViewModel : ViewModel() {
     private val _filmListLiveData = MutableLiveData<List<Film>>()
     val filmListLiveData: LiveData<List<Film>>
         get() = _filmListLiveData
 
-    private var interactor: Interactor = App.instance.interactor
+    @Inject
+    lateinit var interactor: Interactor
 
     private var page = 1
 
     init {
+        App.instance.dagger.inject(this)
         loadNewPage()
     }
 
