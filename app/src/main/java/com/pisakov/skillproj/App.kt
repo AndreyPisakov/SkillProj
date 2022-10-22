@@ -6,6 +6,9 @@ import com.pisakov.skillproj.data.MainRepository
 import com.pisakov.skillproj.data.TmdbApi
 import com.pisakov.skillproj.di.AppComponent
 import com.pisakov.skillproj.di.DaggerAppComponent
+import com.pisakov.skillproj.di.module.DatabaseModule
+import com.pisakov.skillproj.di.module.DomainModule
+import com.pisakov.skillproj.di.module.RemoteModule
 import com.pisakov.skillproj.domain.Interactor
 import dagger.internal.DaggerGenerated
 import okhttp3.OkHttpClient
@@ -21,7 +24,11 @@ class App : Application() {
         super.onCreate()
         instance = this
         //Создаем компонент
-        dagger = DaggerAppComponent.create()
+        dagger = DaggerAppComponent.builder()
+            .remoteModule(RemoteModule())
+            .databaseModule(DatabaseModule())
+            .domainModule(DomainModule(this))
+            .build()
     }
 
     companion object {

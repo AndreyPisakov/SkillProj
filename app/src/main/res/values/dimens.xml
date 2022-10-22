@@ -4,4 +4,5 @@
     <dimen name="dimen_height_app_bar">200dp</dimen>
     <dimen name="dimen_min_height_app_bar">60dp</dimen>
     <dimen name="dimen_rv_selections_item">100dp</dimen>
+    <dimen name="dimen_search_view_width">200dp</dimen>
 </resources>

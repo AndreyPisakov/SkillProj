@@ -18,8 +18,8 @@
         android:title="@string/later"
         app:showAsAction="withText"/>
     <item
-        android:id="@+id/selectionsFragment"
-        android:icon="@drawable/ic_video"
-        android:title="@string/selections"
+        android:id="@+id/settingsFragment"
+        android:title="@string/settings"
+        android:icon="@drawable/ic_settings"
         app:showAsAction="withText"/>
 </menu>
