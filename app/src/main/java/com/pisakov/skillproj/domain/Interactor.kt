@@ -10,11 +10,17 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
     fun getFilmsFromApi(page: Int, category: String, callback: ApiCallback) {
         retrofitService.getFilms(category, API.KEY, "ru-RU", page).enqueue(object : Callback<TmdbResultsDto> {
             override fun onResponse(call: Call<TmdbResultsDto>, response: Response<TmdbResultsDto>) {
-                callback.onSuccess(Converter.convertApiListToDtoList(response.body()?.tmdbFilms))
+                val list = Converter.convertApiListToDtoList(response.body()?.tmdbFilms)
+                list.forEach {
+                    repo.putToDb(film = it)
+                }
+                callback.onSuccess(list)
             }
             override fun onFailure(call: Call<TmdbResultsDto>, t: Throwable) { callback.onFailure() }
         })
     }
+
+    fun getFilmsFromDB(): List<Film> = repo.getAllFromDB()
 
     fun saveDefaultCategoryToPreferences(category: String) {
         preferences.saveDefaultCategory(category)

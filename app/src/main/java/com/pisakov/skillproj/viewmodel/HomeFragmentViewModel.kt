@@ -34,7 +34,9 @@ class HomeFragmentViewModel : ViewModel() {
                 list.addAll(films)
                 _filmListLiveData.postValue(list)
             }
-            override fun onFailure() {}
+            override fun onFailure() {
+                _filmListLiveData.postValue(interactor.getFilmsFromDB())
+            }
         })
         page++
     }
