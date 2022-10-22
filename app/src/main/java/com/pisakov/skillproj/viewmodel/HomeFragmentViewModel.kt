@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.pisakov.skillproj.App
+import com.pisakov.skillproj.domain.ApiCallback
 import com.pisakov.skillproj.domain.Film
 import com.pisakov.skillproj.domain.Interactor
 import com.pisakov.skillproj.utils.Selections
@@ -22,10 +23,11 @@ class HomeFragmentViewModel : ViewModel() {
     init {
         App.instance.dagger.inject(this)
         loadNewPage()
+        registerSharedPrefListener()
     }
 
     fun loadNewPage() {
-        interactor.getListFilmsFromApi(Selections.popular, page, object : Interactor.ApiCallback {
+        interactor.getFilmsFromApi(page, interactor.getDefaultCategoryFromPreferences(), object : ApiCallback {
             override fun onSuccess(films: List<Film>) {
                 val list = mutableListOf<Film>()
                 _filmListLiveData.value?.let { list.addAll(it) }
@@ -37,4 +39,13 @@ class HomeFragmentViewModel : ViewModel() {
         page++
     }
 
+    private fun registerSharedPrefListener(){
+        interactor.registerSharedPrefListener(object : Interactor.onSharedPrefChange {
+            override fun change() {
+                page = 1
+                _filmListLiveData.value = listOf()
+                loadNewPage()
+            }
+        })
+    }
 }

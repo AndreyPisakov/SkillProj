@@ -5,6 +5,7 @@ import com.pisakov.skillproj.di.module.DomainModule
 import com.pisakov.skillproj.di.module.RemoteModule
 import com.pisakov.skillproj.viewmodel.HomeFragmentViewModel
 import com.pisakov.skillproj.viewmodel.ListFragmentViewModel
+import com.pisakov.skillproj.viewmodel.SettingsFragmentViewModel
 import dagger.Component
 import javax.inject.Singleton
 
@@ -19,4 +20,5 @@ import javax.inject.Singleton
 interface AppComponent {
     fun inject(homeFragmentViewModel: HomeFragmentViewModel)
     fun inject(listFragmentViewModel: ListFragmentViewModel)
+    fun inject(settingsFragmentViewModel: SettingsFragmentViewModel)
 }
