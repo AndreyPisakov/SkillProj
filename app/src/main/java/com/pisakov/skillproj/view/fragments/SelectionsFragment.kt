@@ -31,11 +31,10 @@ class SelectionsFragment : Fragment() {
 
     private fun initRV(view: View) {
         val list = listOf(
-            Selections.popular,
-            Selections.top_rated,
-            Selections.latest,
-            Selections.now_playing,
-            Selections.upcoming
+            Selections.R_POPULAR_CATEGORY,
+            Selections.R_TOP_RATED_CATEGORY,
+            Selections.R_NOW_PLAYING_CATEGORY,
+            Selections.R_UPCOMING_CATEGORY
         )
         binding.mainRecycler.apply {
             selectionsAdapter = SelectionListRecyclerAdapter(object : SelectionListRecyclerAdapter.OnItemClickListener {
