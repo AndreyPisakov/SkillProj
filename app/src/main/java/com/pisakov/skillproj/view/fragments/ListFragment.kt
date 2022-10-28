@@ -11,7 +11,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pisakov.skillproj.R
 import com.pisakov.skillproj.databinding.FragmentListBinding
-import com.pisakov.skillproj.domain.Film
+import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.utils.TopSpacingItemDecoration
 import com.pisakov.skillproj.view.rv_adapters.FilmListRecyclerAdapter
 import com.pisakov.skillproj.viewmodel.ListFragmentViewModel

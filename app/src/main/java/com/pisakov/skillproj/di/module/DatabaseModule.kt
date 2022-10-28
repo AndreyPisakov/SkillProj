@@ -1,8 +1,10 @@
 package com.pisakov.skillproj.di.module
 
 import android.content.Context
+import androidx.room.Room
 import com.pisakov.skillproj.data.MainRepository
-import com.pisakov.skillproj.data.db.DatabaseHelper
+import com.pisakov.skillproj.data.dao.FilmDao
+import com.pisakov.skillproj.data.db.AppDatabase
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -11,9 +13,14 @@ import javax.inject.Singleton
 class DatabaseModule {
     @Singleton
     @Provides
-    fun provideDatabaseHelper(context: Context) = DatabaseHelper(context)
+    fun provideFilmDao(context: Context) =
+        Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "film_db"
+        ).build().filmDao()
 
     @Provides
     @Singleton
-    fun provideRepository(databaseHelper: DatabaseHelper) = MainRepository(databaseHelper)
+    fun provideRepository(filmDao: FilmDao) = MainRepository(filmDao)
 }

@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.pisakov.skillproj.App
 import com.pisakov.skillproj.domain.ApiCallback
-import com.pisakov.skillproj.domain.Film
+import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.domain.Interactor
-import com.pisakov.skillproj.utils.Selections
+import java.util.concurrent.Executors
 import javax.inject.Inject
 
 class HomeFragmentViewModel : ViewModel() {
@@ -35,7 +35,9 @@ class HomeFragmentViewModel : ViewModel() {
                 _filmListLiveData.postValue(list)
             }
             override fun onFailure() {
-                _filmListLiveData.postValue(interactor.getFilmsFromDB())
+                Executors.newSingleThreadExecutor().execute {
+                    _filmListLiveData.postValue(interactor.getFilmsFromDB())
+                }
             }
         })
         page++

@@ -1,23 +1,34 @@
 package com.pisakov.skillproj.view.fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.pisakov.skillproj.view.rv_adapters.FilmListRecyclerAdapter
 import com.pisakov.skillproj.R
-import com.pisakov.skillproj.utils.TopSpacingItemDecoration
+import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.databinding.FragmentFavoritesBinding
-import com.pisakov.skillproj.domain.Film
 import com.pisakov.skillproj.utils.AnimationHelper
+import com.pisakov.skillproj.utils.TopSpacingItemDecoration
+import com.pisakov.skillproj.view.rv_adapters.FilmListRecyclerAdapter
+import com.pisakov.skillproj.viewmodel.FavoriteFragmentViewModel
+import com.pisakov.skillproj.viewmodel.HomeFragmentViewModel
 
 class FavoritesFragment : Fragment() {
-
     private lateinit var binding:FragmentFavoritesBinding
+    private lateinit var filmsAdapter: FilmListRecyclerAdapter
+    private val viewModel by lazy {
+        ViewModelProvider.NewInstanceFactory().create(FavoriteFragmentViewModel::class.java)
+    }
+    private var filmsDataBase = listOf<Film>()
+        set(value) {
+            if (field == value) return
+            field = value
+            filmsAdapter.submitList(field)
+        }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_favorites, container, false)
@@ -28,25 +39,23 @@ class FavoritesFragment : Fragment() {
         binding = FragmentFavoritesBinding.bind(view)
         AnimationHelper.performFragmentCircularRevealAnimation(binding.favoritesFragmentRoot, requireActivity(), 2)
         initRV(view)
+        viewModel.filmListLiveData.observe(viewLifecycleOwner){
+            filmsDataBase = it
+        }
     }
 
     private fun initRV(view: View) {
-//        val favoritesList: List<Film> = listOf(
-//            Film(1,"Star is born", R.drawable.poster_1, 2.2f, "This should be a description", true),
-//            Film(2,"Kill Bill", R.drawable.poster_2, 9.9f,"This should be a description", true),
-//            Film(3,"Bring him home", R.drawable.poster_3, 4.7f,"This should be a description", true)
-//        )
-//        binding.favoritesRecycler.apply {
-//            val filmsAdapter =
-//                FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
-//                    override fun click(film: Film) {
-//                        view.findNavController().navigate(FavoritesFragmentDirections.actionFavoritesFragmentToDetailsFragment(film))
-//                    }
-//                })
-//            adapter = filmsAdapter
-//            layoutManager = LinearLayoutManager(requireContext())
-//            addItemDecoration(TopSpacingItemDecoration(8))
-//            filmsAdapter.submitList(favoritesList)
-//        }
+        binding.favoritesRecycler.apply {
+            filmsAdapter = FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
+                override fun click(film: Film) {
+                    view.findNavController()
+                        .navigate(FavoritesFragmentDirections.actionFavoritesFragmentToDetailsFragment(film))
+                }
+            }, object : FilmListRecyclerAdapter.Paging { override fun loadNewPage() {} })
+            adapter = filmsAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            addItemDecoration(TopSpacingItemDecoration(8))
+        }
+        filmsAdapter.submitList(filmsDataBase)
     }
 }

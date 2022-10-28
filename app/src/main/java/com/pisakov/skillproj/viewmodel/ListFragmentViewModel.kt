@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.pisakov.skillproj.App
 import com.pisakov.skillproj.domain.ApiCallback
-import com.pisakov.skillproj.domain.Film
+import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.domain.Interactor
 import com.pisakov.skillproj.utils.Selections
 import javax.inject.Inject

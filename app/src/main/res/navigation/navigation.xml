@@ -21,7 +21,7 @@
         tools:layout="@layout/fragment_details" >
         <argument
             android:name="film"
-            app:argType="com.pisakov.skillproj.domain.Film" />
+            app:argType="com.pisakov.skillproj.data.entity.Film" />
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"

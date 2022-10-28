@@ -1,6 +1,8 @@
 package com.pisakov.skillproj.domain
 
+import androidx.lifecycle.LiveData
 import com.pisakov.skillproj.data.*
+import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.utils.Converter
 import retrofit2.Call
 import retrofit2.Callback
@@ -11,9 +13,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
         retrofitService.getFilms(category, API.KEY, "ru-RU", page).enqueue(object : Callback<TmdbResultsDto> {
             override fun onResponse(call: Call<TmdbResultsDto>, response: Response<TmdbResultsDto>) {
                 val list = Converter.convertApiListToDtoList(response.body()?.tmdbFilms)
-                list.forEach {
-                    repo.putToDb(film = it)
-                }
+                repo.putToDb(list)
                 callback.onSuccess(list)
             }
             override fun onFailure(call: Call<TmdbResultsDto>, t: Throwable) { callback.onFailure() }
@@ -21,6 +21,10 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
     }
 
     fun getFilmsFromDB(): List<Film> = repo.getAllFromDB()
+
+    fun getFavoriteFilmsFromDB(): LiveData<List<Film>> = repo.getFavoriteFromDB()
+
+    fun updateFilmInDB(film: Film) = repo.updateFilmInDB(film)
 
     fun saveDefaultCategoryToPreferences(category: String) {
         preferences.saveDefaultCategory(category)

@@ -6,16 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.pisakov.skillproj.R
 import com.pisakov.skillproj.databinding.FragmentDetailsBinding
 import com.pisakov.skillproj.data.ApiConstants
-import com.pisakov.skillproj.domain.Film
+import com.pisakov.skillproj.data.entity.Film
+import com.pisakov.skillproj.viewmodel.DetailsFragmentViewModel
+import com.pisakov.skillproj.viewmodel.FavoriteFragmentViewModel
 
 class DetailsFragment : Fragment() {
-
     private lateinit var binding: FragmentDetailsBinding
     private lateinit var film: Film
+    private val viewModel by lazy {
+        ViewModelProvider.NewInstanceFactory().create(DetailsFragmentViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +54,7 @@ class DetailsFragment : Fragment() {
                 else R.drawable.ic_favorite_border
             )
             film.isInFavorites = !film.isInFavorites
+            viewModel.updateFilm(film)
         }
     }
 
