@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.pisakov.skillproj.R
 import com.pisakov.skillproj.databinding.FilmItemBinding
 import com.pisakov.skillproj.data.ApiConstants
-import com.pisakov.skillproj.domain.Film
+import com.pisakov.skillproj.data.entity.Film
 
 class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener, private val paging: Paging) : ListAdapter<Film, FilmListRecyclerAdapter.FilmViewHolder>(
     FilmsDiffCallback()
@@ -54,7 +54,7 @@ class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener, pr
     }
 
     class FilmsDiffCallback : DiffUtil.ItemCallback<Film>() {
-        override fun areItemsTheSame(oldItem: Film, newItem: Film): Boolean = oldItem.title == newItem.title
+        override fun areItemsTheSame(oldItem: Film, newItem: Film): Boolean = oldItem.id == newItem.id
         override fun areContentsTheSame(oldItem: Film, newItem: Film): Boolean = oldItem == newItem
     }
 }

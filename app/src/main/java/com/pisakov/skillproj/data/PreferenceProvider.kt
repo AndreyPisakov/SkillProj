@@ -26,9 +26,7 @@ class PreferenceProvider(context: Context) {
 
     fun registerSharedPrefListener(change: Interactor.onSharedPrefChange){
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            when (key) {
-                KEY_DEFAULT_CATEGORY -> change.change()
-            }
+            change.change()
         }
         preference.registerOnSharedPreferenceChangeListener(listener)
     }
