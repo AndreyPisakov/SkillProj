@@ -11,12 +11,12 @@ import com.pisakov.skillproj.utils.Selections
 import javax.inject.Inject
 
 class ListFragmentViewModel : ViewModel() {
+    @Inject
+    lateinit var interactor: Interactor
+
     private val _filmListLiveData = MutableLiveData<List<Film>>()
     val filmListLiveData: LiveData<List<Film>>
         get() = _filmListLiveData
-
-    @Inject
-    lateinit var interactor: Interactor
 
     var page: Int = 1
 
@@ -25,11 +25,11 @@ class ListFragmentViewModel : ViewModel() {
     }
 
     private val callback = object : ApiCallback {
-        override fun onSuccess(films: List<Film>) {
-            val list = mutableListOf<Film>()
-            _filmListLiveData.value?.let { list.addAll(it) }
-            list.addAll(films)
-            _filmListLiveData.postValue(list)
+        override fun onSuccess(){//films: List<Film>) {
+//            val list = mutableListOf<Film>()
+//            _filmListLiveData.value?.let { list.addAll(it) }
+//            list.addAll(films)
+//            _filmListLiveData.postValue(list)
         }
         override fun onFailure() {}
     }

@@ -8,6 +8,7 @@ import com.pisakov.skillproj.domain.Interactor
 class PreferenceProvider(context: Context) {
     private val appContext = context.applicationContext
     private val preference: SharedPreferences = appContext.getSharedPreferences(SHARED_FILE_NAME, Context.MODE_PRIVATE)
+    private lateinit var listener: SharedPreferences.OnSharedPreferenceChangeListener
 
     init {
         if(preference.getBoolean(KEY_FIRST_LAUNCH, false)) {
@@ -25,10 +26,14 @@ class PreferenceProvider(context: Context) {
     }
 
     fun registerSharedPrefListener(change: Interactor.onSharedPrefChange){
-        val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+        listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
             change.change()
         }
         preference.registerOnSharedPreferenceChangeListener(listener)
+    }
+
+    fun unregisterSharedPrefListener(){
+        preference.unregisterOnSharedPreferenceChangeListener(listener)
     }
 
     companion object {

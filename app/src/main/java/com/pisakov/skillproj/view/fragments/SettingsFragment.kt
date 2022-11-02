@@ -38,7 +38,6 @@ class SettingsFragment : Fragment() {
                 Selections.NOW_PLAYING_CATEGORY -> binding.radioGroup.check(R.id.radio_now_playing)
             }
         }
-
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId) {
                 R.id.radio_popular -> viewModel.putCategoryProperty(Selections.POPULAR_CATEGORY)
