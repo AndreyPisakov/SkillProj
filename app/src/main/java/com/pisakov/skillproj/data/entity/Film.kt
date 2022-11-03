@@ -3,6 +3,7 @@ package com.pisakov.skillproj.data.entity
 import android.os.Parcelable
 import androidx.room.*
 import kotlinx.android.parcel.Parcelize
+import java.time.LocalTime
 
 @Parcelize
 @Entity(tableName = "cached_films")
@@ -15,13 +16,13 @@ data class Film(
     @ColumnInfo(name = "is_in_favorites") var isInFavorites: Boolean = false
 ) : Parcelable
 
+
+
 @Entity(tableName = "category", foreignKeys = [ForeignKey(
     entity = Film::class,
     parentColumns = ["id"],
     childColumns = ["film_id"],
-    onDelete = ForeignKey.CASCADE
-)]
-)
+    onDelete = ForeignKey.CASCADE)])
 data class Category(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "film_id")

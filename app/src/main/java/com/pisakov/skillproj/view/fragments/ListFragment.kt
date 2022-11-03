@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,11 +40,15 @@ class ListFragment : Fragment() {
         binding = FragmentListBinding.bind(view)
         val selectionName = ListFragmentArgs.fromBundle(requireArguments()).selectionName
         viewModel.page = 1
-        viewModel.loadList(selectionName)
+        viewModel.selectionName = selectionName
+        viewModel.loadList()
         viewModel.filmListLiveData.observe(viewLifecycleOwner){
             filmsDataBase = it
         }
-        initRV(view, selectionName)
+        viewModel.showProgressBar.observe(viewLifecycleOwner) {
+            binding.progressBar.isVisible = it
+        }
+        initRV(view)
         search()
     }
 
@@ -65,7 +70,7 @@ class ListFragment : Fragment() {
         })
     }
 
-    private fun initRV(view: View, selectionName: String) {
+    private fun initRV(view: View) {
         binding.mainRecycler.apply {
             filmsAdapter = FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
                 override fun click(film: Film) {
@@ -74,7 +79,7 @@ class ListFragment : Fragment() {
                 }
             }, object : FilmListRecyclerAdapter.Paging {
                 override fun loadNewPage() {
-                    viewModel.loadList(selectionName)
+                    viewModel.loadList()
                 }
 
             })

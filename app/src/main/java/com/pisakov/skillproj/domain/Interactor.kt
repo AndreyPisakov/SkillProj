@@ -1,6 +1,5 @@
 package com.pisakov.skillproj.domain
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import com.pisakov.skillproj.data.*
 import com.pisakov.skillproj.data.entity.Film
@@ -14,22 +13,15 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
         retrofitService.getFilms(category, API.KEY, "ru-RU", page).enqueue(object : Callback<TmdbResultsDto> {
             override fun onResponse(call: Call<TmdbResultsDto>, response: Response<TmdbResultsDto>) {
                 val list = Converter.convertApiListToDtoList(response.body()?.tmdbFilms)
-                Log.d("MyLog", "!inter")
-                repo.putToDb(list, category)
-                callback.onSuccess()//list)
+                repo.deleteCache(category)
+                repo.saveCache(list, category)
+                callback.onSuccess(list)
             }
-            override fun onFailure(call: Call<TmdbResultsDto>, t: Throwable) {
-                Log.d("MyLog", "!fail")
-                callback.onFailure() }
+            override fun onFailure(call: Call<TmdbResultsDto>, t: Throwable) { callback.onFailure() }
         })
     }
 
-    //fun getFilmsFromDB(): LiveData<List<Film>> = repo.getAllFromDB()
-    fun getFilmsFromDB(category: String): LiveData<List<Film>> {
-        Log.d("MyLog", "interactor")
-        return repo.getFilmsWithCategory(category)
-    }//= repo.getFilmsWithCategory(category)
-    fun clearTable() { repo.clearTable() }
+    fun getFilmsFromDB(category: String = getDefaultCategoryFromPreferences()): List<Film> = repo.getFilmsWithCategory(category)
     fun getFavoriteFilmsFromDB(): LiveData<List<Film>> = repo.getFavoriteFromDB()
     fun updateFilmInDB(film: Film) = repo.updateFilmInDB(film)
 
@@ -45,6 +37,6 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
 }
 
 interface ApiCallback {
-    fun onSuccess()//films: List<Film>)
+    fun onSuccess(films: List<Film>)
     fun onFailure()
 }
