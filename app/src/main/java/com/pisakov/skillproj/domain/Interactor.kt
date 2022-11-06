@@ -13,28 +13,23 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
         retrofitService.getFilms(category, API.KEY, "ru-RU", page).enqueue(object : Callback<TmdbResultsDto> {
             override fun onResponse(call: Call<TmdbResultsDto>, response: Response<TmdbResultsDto>) {
                 val list = Converter.convertApiListToDtoList(response.body()?.tmdbFilms)
-                repo.putToDb(list)
+                repo.deleteCache(category)
+                repo.saveCache(list, category)
                 callback.onSuccess(list)
             }
             override fun onFailure(call: Call<TmdbResultsDto>, t: Throwable) { callback.onFailure() }
         })
     }
 
-    fun getFilmsFromDB(): List<Film> = repo.getAllFromDB()
-
+    fun getFilmsFromDB(category: String = getDefaultCategoryFromPreferences()): List<Film> = repo.getFilmsWithCategory(category)
     fun getFavoriteFilmsFromDB(): LiveData<List<Film>> = repo.getFavoriteFromDB()
-
     fun updateFilmInDB(film: Film) = repo.updateFilmInDB(film)
 
-    fun saveDefaultCategoryToPreferences(category: String) {
-        preferences.saveDefaultCategory(category)
-    }
-
+    fun saveDefaultCategoryToPreferences(category: String) { preferences.saveDefaultCategory(category) }
     fun getDefaultCategoryFromPreferences() = preferences.getDefaultCategory()
 
-    fun registerSharedPrefListener(change: onSharedPrefChange){
-        preferences.registerSharedPrefListener(change)
-    }
+    fun registerSharedPrefListener(change: onSharedPrefChange){ preferences.registerSharedPrefListener(change) }
+    fun unregisterSharedPrefListener(){ preferences.unregisterSharedPrefListener() }
 
     interface onSharedPrefChange {
         fun change()

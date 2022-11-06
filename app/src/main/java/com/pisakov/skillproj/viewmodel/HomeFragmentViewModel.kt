@@ -11,12 +11,16 @@ import java.util.concurrent.Executors
 import javax.inject.Inject
 
 class HomeFragmentViewModel : ViewModel() {
+    @Inject
+    lateinit var interactor: Interactor
+
     private val _filmListLiveData = MutableLiveData<List<Film>>()
     val filmListLiveData: LiveData<List<Film>>
         get() = _filmListLiveData
 
-    @Inject
-    lateinit var interactor: Interactor
+    private val _showProgressBar = MutableLiveData<Boolean>()
+    val showProgressBar: LiveData<Boolean>
+        get() = _showProgressBar
 
     private var page = 1
 
@@ -27,17 +31,19 @@ class HomeFragmentViewModel : ViewModel() {
     }
 
     fun loadNewPage() {
+        _showProgressBar.value = true
         interactor.getFilmsFromApi(page, interactor.getDefaultCategoryFromPreferences(), object : ApiCallback {
             override fun onSuccess(films: List<Film>) {
                 val list = mutableListOf<Film>()
                 _filmListLiveData.value?.let { list.addAll(it) }
                 list.addAll(films)
-                _filmListLiveData.postValue(list)
+                _filmListLiveData.value = list
+
+                _showProgressBar.value = false
             }
             override fun onFailure() {
-                Executors.newSingleThreadExecutor().execute {
-                    _filmListLiveData.postValue(interactor.getFilmsFromDB())
-                }
+                Executors.newSingleThreadExecutor().execute { _filmListLiveData.postValue(interactor.getFilmsFromDB()) }
+                _showProgressBar.value = false
             }
         })
         page++
@@ -51,5 +57,10 @@ class HomeFragmentViewModel : ViewModel() {
                 loadNewPage()
             }
         })
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        interactor.unregisterSharedPrefListener()
     }
 }

@@ -8,17 +8,32 @@ import com.pisakov.skillproj.domain.ApiCallback
 import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.domain.Interactor
 import com.pisakov.skillproj.utils.Selections
+import java.util.concurrent.Executors
 import javax.inject.Inject
 
 class ListFragmentViewModel : ViewModel() {
+    @Inject
+    lateinit var interactor: Interactor
+
     private val _filmListLiveData = MutableLiveData<List<Film>>()
     val filmListLiveData: LiveData<List<Film>>
         get() = _filmListLiveData
 
-    @Inject
-    lateinit var interactor: Interactor
+    private val _showProgressBar = MutableLiveData<Boolean>()
+    val showProgressBar: LiveData<Boolean>
+        get() = _showProgressBar
 
     var page: Int = 1
+    var selectionName = ""
+        set(value) {
+            field = when (value){
+                Selections.R_POPULAR_CATEGORY -> Selections.POPULAR_CATEGORY
+                Selections.R_TOP_RATED_CATEGORY -> Selections.TOP_RATED_CATEGORY
+                Selections.R_NOW_PLAYING_CATEGORY -> Selections.NOW_PLAYING_CATEGORY
+                Selections.R_UPCOMING_CATEGORY -> Selections.UPCOMING_CATEGORY
+                else -> return
+            }
+        }
 
     init {
         App.instance.dagger.inject(this)
@@ -30,17 +45,17 @@ class ListFragmentViewModel : ViewModel() {
             _filmListLiveData.value?.let { list.addAll(it) }
             list.addAll(films)
             _filmListLiveData.postValue(list)
+            _showProgressBar.value = false
         }
-        override fun onFailure() {}
+        override fun onFailure() {
+            Executors.newSingleThreadExecutor().execute { _filmListLiveData.postValue(interactor.getFilmsFromDB(selectionName)) }
+            _showProgressBar.value = false
+        }
     }
 
-    fun loadList(selectionName: String){
-        when (selectionName){
-            Selections.R_POPULAR_CATEGORY -> interactor.getFilmsFromApi(page, Selections.POPULAR_CATEGORY, callback)
-            Selections.R_TOP_RATED_CATEGORY -> interactor.getFilmsFromApi(page, Selections.TOP_RATED_CATEGORY, callback)
-            Selections.R_NOW_PLAYING_CATEGORY -> interactor.getFilmsFromApi(page, Selections.NOW_PLAYING_CATEGORY, callback)
-            Selections.R_UPCOMING_CATEGORY -> interactor.getFilmsFromApi(page, Selections.UPCOMING_CATEGORY, callback)
-        }
+    fun loadList(){
+        _showProgressBar.value = true
+        interactor.getFilmsFromApi(page, selectionName, callback)
         page++
     }
 }
