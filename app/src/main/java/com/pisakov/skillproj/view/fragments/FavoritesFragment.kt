@@ -1,7 +1,6 @@
 package com.pisakov.skillproj.view.fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +15,6 @@ import com.pisakov.skillproj.utils.AnimationHelper
 import com.pisakov.skillproj.utils.TopSpacingItemDecoration
 import com.pisakov.skillproj.view.rv_adapters.FilmListRecyclerAdapter
 import com.pisakov.skillproj.viewmodel.FavoriteFragmentViewModel
-import com.pisakov.skillproj.viewmodel.HomeFragmentViewModel
 
 class FavoritesFragment : Fragment() {
     private lateinit var binding:FragmentFavoritesBinding
