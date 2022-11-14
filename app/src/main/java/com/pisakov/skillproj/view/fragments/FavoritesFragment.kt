@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.coroutineScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pisakov.skillproj.R
@@ -15,6 +16,7 @@ import com.pisakov.skillproj.utils.AnimationHelper
 import com.pisakov.skillproj.utils.TopSpacingItemDecoration
 import com.pisakov.skillproj.view.rv_adapters.FilmListRecyclerAdapter
 import com.pisakov.skillproj.viewmodel.FavoriteFragmentViewModel
+import kotlinx.coroutines.launch
 
 class FavoritesFragment : Fragment() {
     private lateinit var binding:FragmentFavoritesBinding
@@ -22,12 +24,6 @@ class FavoritesFragment : Fragment() {
     private val viewModel by lazy {
         ViewModelProvider.NewInstanceFactory().create(FavoriteFragmentViewModel::class.java)
     }
-    private var filmsDataBase = listOf<Film>()
-        set(value) {
-            if (field == value) return
-            field = value
-            filmsAdapter.submitList(field)
-        }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_favorites, container, false)
@@ -38,23 +34,24 @@ class FavoritesFragment : Fragment() {
         binding = FragmentFavoritesBinding.bind(view)
         AnimationHelper.performFragmentCircularRevealAnimation(binding.favoritesFragmentRoot, requireActivity(), 2)
         initRV(view)
-        viewModel.filmListLiveData.observe(viewLifecycleOwner){
-            filmsDataBase = it
-        }
     }
 
     private fun initRV(view: View) {
         binding.favoritesRecycler.apply {
-            filmsAdapter = FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
-                override fun click(film: Film) {
+            filmsAdapter = FilmListRecyclerAdapter(
+                click = { film: Film ->
                     view.findNavController()
-                        .navigate(FavoritesFragmentDirections.actionFavoritesFragmentToDetailsFragment(film))
-                }
-            }, object : FilmListRecyclerAdapter.Paging { override fun loadNewPage() {} })
+                        .navigate(FavoritesFragmentDirections.actionFavoritesFragmentToDetailsFragment(film)) },
+                loadNewPage = {}
+                )
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(requireContext())
             addItemDecoration(TopSpacingItemDecoration(8))
         }
-        filmsAdapter.submitList(filmsDataBase)
+        lifecycle.coroutineScope.launch {
+            viewModel.getFilmListFlow().collect {
+                filmsAdapter.submitList(it)
+            }
+        }
     }
 }

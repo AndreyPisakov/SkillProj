@@ -2,13 +2,12 @@ package com.pisakov.skillproj.data.entity
 
 import android.os.Parcelable
 import androidx.room.*
-import kotlinx.android.parcel.Parcelize
-import java.time.LocalTime
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity(tableName = "cached_films")
 data class Film(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey val id: Int,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "poster_path") val poster: String,
     @ColumnInfo(name = "overview") val description: String,
@@ -25,8 +24,7 @@ data class Film(
     onDelete = ForeignKey.CASCADE)])
 data class Category(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "film_id")
-    val filmId: Int = 0,
+    @ColumnInfo(name = "film_id") val filmId: Int = 0,
     @ColumnInfo(name = "is_popular") var isPopular: Boolean = false,
     @ColumnInfo(name = "is_top_rated") var isTopRated: Boolean = false,
     @ColumnInfo(name = "is_now_playing") var isNowPlaying: Boolean = false,

@@ -12,29 +12,20 @@ import com.pisakov.skillproj.databinding.FilmItemBinding
 import com.pisakov.skillproj.data.ApiConstants
 import com.pisakov.skillproj.data.entity.Film
 
-class FilmListRecyclerAdapter(private val clickListener: OnItemClickListener, private val paging: Paging) : ListAdapter<Film, FilmListRecyclerAdapter.FilmViewHolder>(
-    FilmsDiffCallback()
-) {
+class FilmListRecyclerAdapter(private val click: (film: Film) -> Unit, private val loadNewPage: () -> Unit):
+    ListAdapter<Film, FilmListRecyclerAdapter.FilmViewHolder>(FilmsDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmViewHolder =
         FilmViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.film_item, parent, false))
 
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
         if (position == itemCount - 3)
-            paging.loadNewPage()
+            loadNewPage()
         val item = getItem(position)
         holder.bind(item)
         holder.binding.itemContainer.setOnClickListener {
-            clickListener.click(item)
+            click(item)
         }
-    }
-
-    interface OnItemClickListener {
-        fun click(film: Film)
-    }
-
-    interface Paging {
-        fun loadNewPage()
     }
 
     class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

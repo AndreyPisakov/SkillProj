@@ -5,9 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.pisakov.skillproj.R
+import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.databinding.SelectionItemBinding
 
-class SelectionListRecyclerAdapter(private val clickListener: OnItemClickListener, private val list: List<String>) : RecyclerView.Adapter<SelectionListRecyclerAdapter.SelectionViewHolder>() {
+class SelectionListRecyclerAdapter(
+    private val list: List<String>,
+    private val click: (title: String) -> Unit) : RecyclerView.Adapter<SelectionListRecyclerAdapter.SelectionViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectionViewHolder =
         SelectionViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.selection_item, parent, false))
@@ -16,12 +19,8 @@ class SelectionListRecyclerAdapter(private val clickListener: OnItemClickListene
         val item = list[position]
         holder.bind(item)
         holder.binding.itemContainer.setOnClickListener {
-            clickListener.click(item)
+            click(item)
         }
-    }
-
-    interface OnItemClickListener {
-        fun click(title: String)
     }
 
     class SelectionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

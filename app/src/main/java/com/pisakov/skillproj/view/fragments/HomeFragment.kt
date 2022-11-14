@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pisakov.skillproj.view.rv_adapters.FilmListRecyclerAdapter
@@ -17,6 +17,7 @@ import com.pisakov.skillproj.databinding.FragmentHomeBinding
 import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.utils.AnimationHelper
 import com.pisakov.skillproj.viewmodel.HomeFragmentViewModel
+import kotlinx.coroutines.launch
 import java.util.*
 
 class HomeFragment : Fragment() {
@@ -25,12 +26,6 @@ class HomeFragment : Fragment() {
     private val viewModel by lazy {
         ViewModelProvider.NewInstanceFactory().create(HomeFragmentViewModel::class.java)
     }
-    private var filmsDataBase = listOf<Film>()
-        set(value) {
-            if (field == value) return
-            field = value
-            filmsAdapter.submitList(field)
-        }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
@@ -39,15 +34,31 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentHomeBinding.bind(view)
-        viewModel.filmListLiveData.observe(viewLifecycleOwner){
-            filmsDataBase = it
-        }
-        viewModel.showProgressBar.observe(viewLifecycleOwner) {
-            binding.progressBar.isVisible = it
-        }
         AnimationHelper.performFragmentCircularRevealAnimation(binding.homeFragmentRoot, requireActivity(), 1)
         initRV(view)
         search()
+        eventHandling()
+    }
+
+    private fun eventHandling() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.progressBarStateFlow.collect {
+                    binding.progressBar.isVisible = it
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.updatingUIStateFlow.collect {
+                    if (it) {
+                        filmsAdapter.submitList(viewModel.filmsDataBase)
+                        viewModel.resetUpdatingState()
+                    }
+                }
+            }
+        }
     }
 
     private fun search() {
@@ -56,10 +67,10 @@ class HomeFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean = true
             override fun onQueryTextChange(newText: String): Boolean {
                 if (newText.isEmpty()) {
-                    filmsAdapter.submitList(filmsDataBase)
+                    filmsAdapter.submitList(viewModel.filmsDataBase)
                     return true
                 }
-                val result = filmsDataBase.filter {
+                val result = viewModel.filmsDataBase.filter {
                     it.title.lowercase(Locale.getDefault()).contains(newText.lowercase(Locale.getDefault()))
                 }
                 filmsAdapter.submitList(result)
@@ -70,21 +81,17 @@ class HomeFragment : Fragment() {
 
     private fun initRV(view: View) {
         binding.mainRecycler.apply {
-            filmsAdapter = FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
-                override fun click(film: Film) {
+            filmsAdapter = FilmListRecyclerAdapter(
+                click = { film: Film ->
                     view.findNavController()
-                        .navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(film))
-                }
-            }, object : FilmListRecyclerAdapter.Paging {
-                override fun loadNewPage() {
-                    viewModel.loadNewPage()
-                }
-
-            })
+                        .navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(film)) },
+                loadNewPage = { viewModel.loadNewPage() }
+            )
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(requireContext())
             addItemDecoration(TopSpacingItemDecoration(8))
         }
-        filmsAdapter.submitList(filmsDataBase)
     }
+
+
 }
