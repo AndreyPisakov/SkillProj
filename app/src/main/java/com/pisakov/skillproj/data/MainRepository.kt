@@ -1,13 +1,17 @@
 package com.pisakov.skillproj.data
 
-import androidx.lifecycle.LiveData
 import com.pisakov.skillproj.data.dao.FilmDao
 import com.pisakov.skillproj.data.entity.Category
 import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.utils.Selections
-import java.util.concurrent.Executors
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 class MainRepository(private val filmDao: FilmDao) {
+
+    val repositoryScope = CoroutineScope(Job())
 
     fun saveCache(films: List<Film>, category: String) {
         val listCategory = mutableListOf<Category>()
@@ -21,14 +25,14 @@ class MainRepository(private val filmDao: FilmDao) {
             }
             listCategory.add(c)
         }
-        Executors.newSingleThreadExecutor().execute {
+        repositoryScope.launch {
             filmDao.insertAll(films)
             filmDao.insertCategory(listCategory)
         }
     }
 
     fun deleteCache(category: String) {
-        Executors.newSingleThreadExecutor().execute {
+        repositoryScope.launch {
             val listId = filmDao.getId(when (category) {
                 Selections.TOP_RATED_CATEGORY -> TOP_RATED_CATEGORY_INT
                 Selections.POPULAR_CATEGORY -> POPULAR_CATEGORY_INT
@@ -40,7 +44,7 @@ class MainRepository(private val filmDao: FilmDao) {
         }
     }
 
-    fun getFilmsWithCategory(category: String): List<Film> = filmDao.getFilmsFromCategory(when (category) {
+    fun getFilmsWithCategory(category: String): Flow<List<Film>> = filmDao.getFilmsFromCategory(when (category) {
             Selections.TOP_RATED_CATEGORY -> TOP_RATED_CATEGORY_INT
             Selections.POPULAR_CATEGORY -> POPULAR_CATEGORY_INT
             Selections.NOW_PLAYING_CATEGORY -> NOW_PLAYING_CATEGORY_INT
@@ -48,10 +52,10 @@ class MainRepository(private val filmDao: FilmDao) {
             else -> ANOTHER_CATEGORY
         })
 
-    fun getFavoriteFromDB(): LiveData<List<Film>> = filmDao.getFavoriteCachedFilms()
+    fun getFavoriteFromDB(): Flow<List<Film>> = filmDao.getFavoriteCachedFilms()
 
     fun updateFilmInDB(film: Film) {
-        Executors.newSingleThreadExecutor().execute {
+        repositoryScope.launch {
             filmDao.insert(film)
         }
     }

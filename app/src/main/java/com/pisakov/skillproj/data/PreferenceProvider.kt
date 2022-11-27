@@ -3,7 +3,6 @@ package com.pisakov.skillproj.data
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import com.pisakov.skillproj.domain.Interactor
 
 class PreferenceProvider(context: Context) {
     private val appContext = context.applicationContext
@@ -25,9 +24,9 @@ class PreferenceProvider(context: Context) {
         return preference.getString(KEY_DEFAULT_CATEGORY, DEFAULT_CATEGORY) ?: DEFAULT_CATEGORY
     }
 
-    fun registerSharedPrefListener(change: Interactor.onSharedPrefChange){
+    fun registerSharedPrefListener(change: () -> Unit){
         listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            change.change()
+            change()
         }
         preference.registerOnSharedPreferenceChangeListener(listener)
     }

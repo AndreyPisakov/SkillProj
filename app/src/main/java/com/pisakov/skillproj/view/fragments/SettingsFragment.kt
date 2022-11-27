@@ -11,7 +11,6 @@ import com.pisakov.skillproj.databinding.FragmentSettingsBinding
 import com.pisakov.skillproj.utils.AnimationHelper
 import com.pisakov.skillproj.utils.Selections
 import com.pisakov.skillproj.viewmodel.SettingsFragmentViewModel
-import kotlinx.android.synthetic.main.fragment_settings.*
 
 class SettingsFragment : Fragment() {
     private lateinit var binding: FragmentSettingsBinding
@@ -29,7 +28,7 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AnimationHelper.performFragmentCircularRevealAnimation(settings_fragment_root, requireActivity(), 5)
+        AnimationHelper.performFragmentCircularRevealAnimation(binding.settingsFragmentRoot, requireActivity(), 5)
         viewModel.categoryPropertyLifeData.observe(viewLifecycleOwner) {
             when (it) {
                 Selections.POPULAR_CATEGORY -> binding.radioGroup.check(R.id.radio_popular)

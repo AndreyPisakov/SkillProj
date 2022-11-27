@@ -1,26 +1,22 @@
 package com.pisakov.skillproj.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.pisakov.skillproj.App
 import com.pisakov.skillproj.domain.ApiCallback
 import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.domain.Interactor
-import java.util.concurrent.Executors
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class HomeFragmentViewModel : ViewModel() {
     @Inject
     lateinit var interactor: Interactor
 
-    private val _filmListLiveData = MutableLiveData<List<Film>>()
-    val filmListLiveData: LiveData<List<Film>>
-        get() = _filmListLiveData
+    val progressBarStateFlow = MutableStateFlow(false)
+    val updatingUIStateFlow = MutableStateFlow(false)
 
-    private val _showProgressBar = MutableLiveData<Boolean>()
-    val showProgressBar: LiveData<Boolean>
-        get() = _showProgressBar
+    var filmsDataBase = mutableListOf<Film>()
 
     private var page = 1
 
@@ -31,36 +27,49 @@ class HomeFragmentViewModel : ViewModel() {
     }
 
     fun loadNewPage() {
-        _showProgressBar.value = true
+        progressBarStateFlow.value = true
         interactor.getFilmsFromApi(page, interactor.getDefaultCategoryFromPreferences(), object : ApiCallback {
             override fun onSuccess(films: List<Film>) {
-                val list = mutableListOf<Film>()
-                _filmListLiveData.value?.let { list.addAll(it) }
-                list.addAll(films)
-                _filmListLiveData.value = list
-
-                _showProgressBar.value = false
+                viewModelScope.launch {
+                    filmsDataBase = (filmsDataBase + films) as MutableList<Film>
+                    updatingUIStateFlow.value = true
+                }
+                progressBarStateFlow.value = false
             }
             override fun onFailure() {
-                Executors.newSingleThreadExecutor().execute { _filmListLiveData.postValue(interactor.getFilmsFromDB()) }
-                _showProgressBar.value = false
+                viewModelScope.launch {
+                    interactor.getFilmsFromDB().collect {
+                        filmsDataBase = it as MutableList<Film>
+                        updatingUIStateFlow.value = true
+                    }
+                }
+                progressBarStateFlow.value = false
             }
         })
         page++
     }
 
     private fun registerSharedPrefListener(){
-        interactor.registerSharedPrefListener(object : Interactor.onSharedPrefChange {
-            override fun change() {
+        interactor.registerSharedPrefListener(
+            change = {
+                clearListFilms()
                 page = 1
-                _filmListLiveData.value = listOf()
                 loadNewPage()
             }
-        })
+        )
     }
 
     override fun onCleared() {
         super.onCleared()
         interactor.unregisterSharedPrefListener()
+    }
+
+    private fun clearListFilms() {
+        filmsDataBase.clear()
+        updatingUIStateFlow.value = true
+    }
+
+    fun resetUpdatingState() {
+        updatingUIStateFlow.value = false
     }
 }

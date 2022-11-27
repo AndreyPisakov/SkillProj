@@ -7,7 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pisakov.skillproj.R
@@ -16,6 +19,7 @@ import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.utils.TopSpacingItemDecoration
 import com.pisakov.skillproj.view.rv_adapters.FilmListRecyclerAdapter
 import com.pisakov.skillproj.viewmodel.ListFragmentViewModel
+import kotlinx.coroutines.launch
 import java.util.*
 
 class ListFragment : Fragment() {
@@ -41,15 +45,31 @@ class ListFragment : Fragment() {
         val selectionName = ListFragmentArgs.fromBundle(requireArguments()).selectionName
         viewModel.page = 1
         viewModel.selectionName = selectionName
+        eventHandling()
         viewModel.loadList()
-        viewModel.filmListLiveData.observe(viewLifecycleOwner){
-            filmsDataBase = it
-        }
-        viewModel.showProgressBar.observe(viewLifecycleOwner) {
-            binding.progressBar.isVisible = it
-        }
         initRV(view)
         search()
+    }
+
+    private fun eventHandling() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.progressBarStateFlow.collect {
+                    binding.progressBar.isVisible = it
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.updatingUIStateFlow.collect {
+                    if (it) {
+                        filmsAdapter.submitList(viewModel.filmsDataBase)
+                        viewModel.resetUpdatingState()
+                    }
+                }
+            }
+        }
     }
 
     private fun search() {
@@ -72,17 +92,12 @@ class ListFragment : Fragment() {
 
     private fun initRV(view: View) {
         binding.mainRecycler.apply {
-            filmsAdapter = FilmListRecyclerAdapter(object : FilmListRecyclerAdapter.OnItemClickListener {
-                override fun click(film: Film) {
+            filmsAdapter = FilmListRecyclerAdapter(
+                click = { film: Film ->
                     view.findNavController()
-                        .navigate(ListFragmentDirections.actionListFragmentToDetailsFragment(film))
-                }
-            }, object : FilmListRecyclerAdapter.Paging {
-                override fun loadNewPage() {
-                    viewModel.loadList()
-                }
-
-            })
+                        .navigate(ListFragmentDirections.actionListFragmentToDetailsFragment(film)) },
+                loadNewPage = { viewModel.loadList() }
+            )
             adapter = filmsAdapter
             layoutManager = LinearLayoutManager(requireContext())
             addItemDecoration(TopSpacingItemDecoration(8))

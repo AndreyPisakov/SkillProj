@@ -37,12 +37,11 @@ class SelectionsFragment : Fragment() {
             Selections.R_UPCOMING_CATEGORY
         )
         binding.mainRecycler.apply {
-            selectionsAdapter = SelectionListRecyclerAdapter(object : SelectionListRecyclerAdapter.OnItemClickListener {
-                override fun click(title: String) {
+            selectionsAdapter = SelectionListRecyclerAdapter(
+                list = list,
+                click = { title: String ->
                     view.findNavController()
-                        .navigate(SelectionsFragmentDirections.actionSelectionsFragmentToListFragment(title))
-                }
-            }, list)
+                        .navigate(SelectionsFragmentDirections.actionSelectionsFragmentToListFragment(title)) } )
             adapter = selectionsAdapter
             layoutManager = LinearLayoutManager(requireContext())
             addItemDecoration(TopSpacingItemDecoration(8))
