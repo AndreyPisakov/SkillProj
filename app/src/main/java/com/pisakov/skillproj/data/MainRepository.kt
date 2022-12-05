@@ -4,14 +4,11 @@ import com.pisakov.skillproj.data.dao.FilmDao
 import com.pisakov.skillproj.data.entity.Category
 import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.utils.Selections
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class MainRepository(private val filmDao: FilmDao) {
-
-    val repositoryScope = CoroutineScope(Job())
 
     fun saveCache(films: List<Film>, category: String) {
         val listCategory = mutableListOf<Category>()
@@ -25,14 +22,16 @@ class MainRepository(private val filmDao: FilmDao) {
             }
             listCategory.add(c)
         }
-        repositoryScope.launch {
+        Completable.fromSingle<List<Film>> {
             filmDao.insertAll(films)
             filmDao.insertCategory(listCategory)
         }
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     fun deleteCache(category: String) {
-        repositoryScope.launch {
+        Completable.fromSingle<List<Category>> {
             val listId = filmDao.getId(when (category) {
                 Selections.TOP_RATED_CATEGORY -> TOP_RATED_CATEGORY_INT
                 Selections.POPULAR_CATEGORY -> POPULAR_CATEGORY_INT
@@ -44,7 +43,7 @@ class MainRepository(private val filmDao: FilmDao) {
         }
     }
 
-    fun getFilmsWithCategory(category: String): Flow<List<Film>> = filmDao.getFilmsFromCategory(when (category) {
+    fun getFilmsWithCategory(category: String): Observable<List<Film>> = filmDao.getFilmsFromCategory(when (category) {
             Selections.TOP_RATED_CATEGORY -> TOP_RATED_CATEGORY_INT
             Selections.POPULAR_CATEGORY -> POPULAR_CATEGORY_INT
             Selections.NOW_PLAYING_CATEGORY -> NOW_PLAYING_CATEGORY_INT
@@ -52,10 +51,10 @@ class MainRepository(private val filmDao: FilmDao) {
             else -> ANOTHER_CATEGORY
         })
 
-    fun getFavoriteFromDB(): Flow<List<Film>> = filmDao.getFavoriteCachedFilms()
+    fun getFavoriteFromDB(): Observable<List<Film>> = filmDao.getFavoriteCachedFilms()
 
     fun updateFilmInDB(film: Film) {
-        repositoryScope.launch {
+        Completable.fromSingle<Film> {
             filmDao.insert(film)
         }
     }

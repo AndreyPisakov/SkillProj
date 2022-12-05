@@ -2,7 +2,7 @@ package com.pisakov.skillproj.domain
 
 import com.pisakov.skillproj.data.*
 import com.pisakov.skillproj.data.entity.Film
-import kotlinx.coroutines.flow.Flow
+import io.reactivex.rxjava3.core.Observable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -15,7 +15,7 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
                     Film(
                         id = it.id,
                         title = it.title,
-                        poster = it.posterPath,
+                        poster = it.posterPath ?: "",
                         description = it.overview,
                         rating = it.voteAverage,
                         isInFavorites = false)
@@ -28,8 +28,8 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
         })
     }
 
-    fun getFilmsFromDB(category: String = getDefaultCategoryFromPreferences()): Flow<List<Film>> = repo.getFilmsWithCategory(category)
-    fun getFavoriteFilmsFromDB(): Flow<List<Film>> = repo.getFavoriteFromDB()
+    fun getFilmsFromDB(category: String = getDefaultCategoryFromPreferences()): Observable<List<Film>> = repo.getFilmsWithCategory(category)
+    fun getFavoriteFilmsFromDB(): Observable<List<Film>> = repo.getFavoriteFromDB()
     fun updateFilmInDB(film: Film) = repo.updateFilmInDB(film)
 
     fun saveDefaultCategoryToPreferences(category: String) { preferences.saveDefaultCategory(category) }

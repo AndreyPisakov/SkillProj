@@ -6,17 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.coroutineScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pisakov.skillproj.R
 import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.databinding.FragmentFavoritesBinding
 import com.pisakov.skillproj.utils.AnimationHelper
+import com.pisakov.skillproj.utils.AutoDisposable
 import com.pisakov.skillproj.utils.TopSpacingItemDecoration
+import com.pisakov.skillproj.utils.addTo
 import com.pisakov.skillproj.view.rv_adapters.FilmListRecyclerAdapter
 import com.pisakov.skillproj.viewmodel.FavoriteFragmentViewModel
-import kotlinx.coroutines.launch
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class FavoritesFragment : Fragment() {
     private lateinit var binding:FragmentFavoritesBinding
@@ -24,6 +26,7 @@ class FavoritesFragment : Fragment() {
     private val viewModel by lazy {
         ViewModelProvider.NewInstanceFactory().create(FavoriteFragmentViewModel::class.java)
     }
+    private val autoDisposable = AutoDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_favorites, container, false)
@@ -32,6 +35,7 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentFavoritesBinding.bind(view)
+        autoDisposable.bindTo(lifecycle)
         AnimationHelper.performFragmentCircularRevealAnimation(binding.favoritesFragmentRoot, requireActivity(), 2)
         initRV(view)
     }
@@ -48,10 +52,11 @@ class FavoritesFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             addItemDecoration(TopSpacingItemDecoration(8))
         }
-        lifecycle.coroutineScope.launch {
-            viewModel.getFilmListFlow().collect {
+        viewModel.getFilmList()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
                 filmsAdapter.submitList(it)
-            }
-        }
+            }.addTo(autoDisposable)
     }
 }

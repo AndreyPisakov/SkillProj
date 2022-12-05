@@ -3,12 +3,12 @@ package com.pisakov.skillproj.data.dao
 import androidx.room.*
 import com.pisakov.skillproj.data.entity.Category
 import com.pisakov.skillproj.data.entity.Film
-import kotlinx.coroutines.flow.Flow
+import io.reactivex.rxjava3.core.Observable
 
 @Dao
 interface FilmDao {
     @Query("SELECT * FROM cached_films WHERE is_in_favorites = 1")
-    fun getFavoriteCachedFilms(): Flow<List<Film>>
+    fun getFavoriteCachedFilms(): Observable<List<Film>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(list: List<Film>)
@@ -26,7 +26,7 @@ interface FilmDao {
             "WHEN :category = 3 THEN category.is_now_playing = 1 " +
             "WHEN :category = 4 THEN category.is_upcoming = 1 " +
             "END")
-    fun getFilmsFromCategory(category : Int): Flow<List<Film>>
+    fun getFilmsFromCategory(category : Int): Observable<List<Film>>
 
     //////////CATEGORY//////////
 

@@ -38,6 +38,7 @@ class FilmListRecyclerAdapter(private val click: (film: Film) -> Unit, private v
                 ratingView.setProgress(film.rating.toFloat())
                 Glide.with(itemView)
                     .load(ApiConstants.IMAGES_URL + "w342" + film.poster)
+                    .error(R.drawable.error)
                     .centerCrop()
                     .into(poster)
             }

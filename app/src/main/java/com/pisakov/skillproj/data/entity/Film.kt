@@ -9,13 +9,11 @@ import kotlinx.parcelize.Parcelize
 data class Film(
     @PrimaryKey val id: Int,
     @ColumnInfo(name = "title") val title: String,
-    @ColumnInfo(name = "poster_path") val poster: String,
+    @ColumnInfo(name = "poster_path") var poster: String?,
     @ColumnInfo(name = "overview") val description: String,
     @ColumnInfo(name = "vote_average") var rating: Double = 0.0,
     @ColumnInfo(name = "is_in_favorites") var isInFavorites: Boolean = false
 ) : Parcelable
-
-
 
 @Entity(tableName = "category", foreignKeys = [ForeignKey(
     entity = Film::class,
