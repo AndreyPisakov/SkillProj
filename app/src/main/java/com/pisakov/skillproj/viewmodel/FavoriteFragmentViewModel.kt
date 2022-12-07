@@ -13,5 +13,5 @@ class FavoriteFragmentViewModel: ViewModel() {
         App.instance.dagger.inject(this)
     }
 
-    fun getFilmListFlow() = interactor.getFavoriteFilmsFromDB()
+    fun getFilmList() = interactor.getFavoriteFilmsFromDB()
 }

@@ -13,7 +13,6 @@ import com.pisakov.skillproj.databinding.FragmentDetailsBinding
 import com.pisakov.skillproj.data.ApiConstants
 import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.viewmodel.DetailsFragmentViewModel
-import com.pisakov.skillproj.viewmodel.FavoriteFragmentViewModel
 
 class DetailsFragment : Fragment() {
     private lateinit var binding: FragmentDetailsBinding

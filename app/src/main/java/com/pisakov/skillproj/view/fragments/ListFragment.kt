@@ -7,19 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pisakov.skillproj.R
 import com.pisakov.skillproj.databinding.FragmentListBinding
 import com.pisakov.skillproj.data.entity.Film
+import com.pisakov.skillproj.utils.AutoDisposable
 import com.pisakov.skillproj.utils.TopSpacingItemDecoration
+import com.pisakov.skillproj.utils.addTo
 import com.pisakov.skillproj.view.rv_adapters.FilmListRecyclerAdapter
 import com.pisakov.skillproj.viewmodel.ListFragmentViewModel
-import kotlinx.coroutines.launch
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.*
 
 class ListFragment : Fragment() {
@@ -28,12 +28,7 @@ class ListFragment : Fragment() {
     private val viewModel by lazy {
         ViewModelProvider.NewInstanceFactory().create(ListFragmentViewModel::class.java)
     }
-    private var filmsDataBase = listOf<Film>()
-        set(value) {
-            if (field == value) return
-            field = value
-            filmsAdapter.submitList(field)
-        }
+    private val autoDisposable = AutoDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_list, container, false)
@@ -42,6 +37,7 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentListBinding.bind(view)
+        autoDisposable.bindTo(lifecycle)
         val selectionName = ListFragmentArgs.fromBundle(requireArguments()).selectionName
         viewModel.page = 1
         viewModel.selectionName = selectionName
@@ -52,24 +48,22 @@ class ListFragment : Fragment() {
     }
 
     private fun eventHandling() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.progressBarStateFlow.collect {
-                    binding.progressBar.isVisible = it
-                }
-            }
-        }
+        viewModel.progressBarState
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                binding.progressBar.isVisible = it
+            }.addTo(autoDisposable)
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.updatingUIStateFlow.collect {
-                    if (it) {
-                        filmsAdapter.submitList(viewModel.filmsDataBase)
-                        viewModel.resetUpdatingState()
-                    }
+        viewModel.updatingUIState
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                if (it) {
+                    filmsAdapter.submitList(viewModel.filmsDataBase)
+                    viewModel.resetUpdatingState()
                 }
-            }
-        }
+            }.addTo(autoDisposable)
     }
 
     private fun search() {
@@ -78,10 +72,10 @@ class ListFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean = true
             override fun onQueryTextChange(newText: String): Boolean {
                 if (newText.isEmpty()) {
-                    filmsAdapter.submitList(filmsDataBase)
+                    filmsAdapter.submitList(viewModel.filmsDataBase)
                     return true
                 }
-                val result = filmsDataBase.filter {
+                val result = viewModel.filmsDataBase.filter {
                     it.title.lowercase(Locale.getDefault()).contains(newText.lowercase(Locale.getDefault()))
                 }
                 filmsAdapter.submitList(result)
@@ -102,6 +96,5 @@ class ListFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             addItemDecoration(TopSpacingItemDecoration(8))
         }
-        filmsAdapter.submitList(filmsDataBase)
     }
 }

@@ -1,22 +1,22 @@
 package com.pisakov.skillproj.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.pisakov.skillproj.App
 import com.pisakov.skillproj.domain.ApiCallback
 import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.domain.Interactor
 import com.pisakov.skillproj.utils.Selections
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
 
 class ListFragmentViewModel : ViewModel() {
     @Inject
     lateinit var interactor: Interactor
 
-    val progressBarStateFlow = MutableStateFlow(false)
-    val updatingUIStateFlow = MutableStateFlow(false)
+    var progressBarState: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    var updatingUIState: BehaviorSubject<Boolean> = BehaviorSubject.create()
 
     var filmsDataBase = mutableListOf<Film>()
 
@@ -38,30 +38,29 @@ class ListFragmentViewModel : ViewModel() {
 
     private val callback = object : ApiCallback {
         override fun onSuccess(films: List<Film>) {
-            viewModelScope.launch {
-                filmsDataBase = (filmsDataBase + films) as MutableList<Film>
-                updatingUIStateFlow.value = true
-            }
-            progressBarStateFlow.value = false
+            filmsDataBase = (filmsDataBase + films) as MutableList<Film>
+            updatingUIState.onNext(true)
+            progressBarState.onNext(false)
         }
         override fun onFailure() {
-            viewModelScope.launch {
-                interactor.getFilmsFromDB().collect {
-                    filmsDataBase = it as MutableList<Film>
-                    updatingUIStateFlow.value = true
+            interactor.getFilmsFromDB()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { list ->
+                    filmsDataBase = list as MutableList<Film>
+                    updatingUIState.onNext(true)
                 }
-            }
-            progressBarStateFlow.value = false
+            progressBarState.onNext(false)
         }
     }
 
     fun loadList(){
-        progressBarStateFlow.value = true
+        progressBarState.onNext(true)
         interactor.getFilmsFromApi(page, selectionName, callback)
         page++
     }
 
     fun resetUpdatingState() {
-        updatingUIStateFlow.value = false
+        updatingUIState.onNext(false)
     }
 }
