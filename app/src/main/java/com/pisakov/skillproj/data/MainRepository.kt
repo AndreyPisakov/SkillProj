@@ -22,7 +22,7 @@ class MainRepository(private val filmDao: FilmDao) {
             }
             listCategory.add(c)
         }
-        Completable.fromSingle<List<Film>> {
+        Completable.fromAction {
             filmDao.insertAll(films)
             filmDao.insertCategory(listCategory)
         }
@@ -54,9 +54,11 @@ class MainRepository(private val filmDao: FilmDao) {
     fun getFavoriteFromDB(): Observable<List<Film>> = filmDao.getFavoriteCachedFilms()
 
     fun updateFilmInDB(film: Film) {
-        Completable.fromSingle<Film> {
+        Completable.fromAction {
             filmDao.insert(film)
         }
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     companion object {

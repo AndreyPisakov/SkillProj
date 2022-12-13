@@ -5,7 +5,9 @@ import com.pisakov.skillproj.App
 import com.pisakov.skillproj.domain.ApiCallback
 import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.domain.Interactor
+import com.pisakov.skillproj.utils.AutoDisposable
 import com.pisakov.skillproj.utils.Selections
+import com.pisakov.skillproj.utils.addTo
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -14,6 +16,7 @@ import javax.inject.Inject
 class ListFragmentViewModel : ViewModel() {
     @Inject
     lateinit var interactor: Interactor
+    private val autoDisposable = AutoDisposable()
 
     var progressBarState: BehaviorSubject<Boolean> = BehaviorSubject.create()
     var updatingUIState: BehaviorSubject<Boolean> = BehaviorSubject.create()
@@ -44,12 +47,10 @@ class ListFragmentViewModel : ViewModel() {
         }
         override fun onFailure() {
             interactor.getFilmsFromDB()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { list ->
                     filmsDataBase = list as MutableList<Film>
                     updatingUIState.onNext(true)
-                }
+                }.addTo(autoDisposable)
             progressBarState.onNext(false)
         }
     }
