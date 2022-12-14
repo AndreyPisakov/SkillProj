@@ -2,6 +2,7 @@ package com.pisakov.skillproj.domain
 
 import com.pisakov.skillproj.data.*
 import com.pisakov.skillproj.data.entity.Film
+import com.pisakov.skillproj.utils.Converter
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,6 +28,11 @@ class Interactor(private val repo: MainRepository, private val retrofitService: 
             override fun onFailure(call: Call<TmdbResultsDto>, t: Throwable) { callback.onFailure() }
         })
     }
+
+    fun getFilmsFromQueryApi(page: Int, query: String): Observable<List<Film>> = retrofitService.getQuery(API.KEY, "ru-RU", query, page)
+            .map {
+                Converter.convertApiListToDtoList(it.tmdbFilms)
+            }
 
     fun getFilmsFromDB(category: String = getDefaultCategoryFromPreferences()): Observable<List<Film>> = repo.getFilmsWithCategory(category)
     fun getFavoriteFilmsFromDB(): Observable<List<Film>> = repo.getFavoriteFromDB()

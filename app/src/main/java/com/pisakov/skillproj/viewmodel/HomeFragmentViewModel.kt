@@ -5,7 +5,11 @@ import com.pisakov.skillproj.App
 import com.pisakov.skillproj.domain.ApiCallback
 import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.domain.Interactor
+import com.pisakov.skillproj.utils.AutoDisposable
+import com.pisakov.skillproj.utils.addTo
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
@@ -19,7 +23,10 @@ class HomeFragmentViewModel : ViewModel() {
 
     var filmsDataBase = mutableListOf<Film>()
 
+    private lateinit var disposable: Disposable
+
     private var page = 1
+    private var pageQuery = 1
 
     init {
         App.instance.dagger.inject(this)
@@ -36,9 +43,7 @@ class HomeFragmentViewModel : ViewModel() {
                 progressBarState.onNext(false)
             }
             override fun onFailure() {
-                interactor.getFilmsFromDB()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                 disposable = interactor.getFilmsFromDB()
                     .subscribe { list ->
                         filmsDataBase = list as MutableList<Film>
                         updatingUIState.onNext(true)
@@ -62,6 +67,7 @@ class HomeFragmentViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         interactor.unregisterSharedPrefListener()
+        disposable.dispose()
     }
 
     private fun clearListFilms() {
@@ -72,4 +78,6 @@ class HomeFragmentViewModel : ViewModel() {
     fun resetUpdatingState() {
         updatingUIState.onNext(false)
     }
+
+    fun getFilmsFromQuery(query: String): Observable<List<Film>> = interactor.getFilmsFromQueryApi(pageQuery, query)
 }
