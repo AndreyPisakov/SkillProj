@@ -1,8 +1,6 @@
-package com.pisakov.skillproj.di.module
+package com.pisakov.remote_module
 
-import com.pisakov.skillproj.BuildConfig
-import com.pisakov.skillproj.data.ApiConstants
-import com.pisakov.skillproj.data.TmdbApi
+import com.pisakov.remote_module.entity.ApiConstants
 import dagger.Module
 import dagger.Provides
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory

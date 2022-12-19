@@ -1,32 +1,26 @@
 package com.pisakov.skillproj.domain
 
+import com.pisakov.remote_module.TmdbApi
 import com.pisakov.skillproj.data.*
 import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.utils.Converter
 import io.reactivex.rxjava3.core.Observable
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class Interactor(private val repo: MainRepository, private val retrofitService: TmdbApi, private val preferences: PreferenceProvider) {
-    fun getFilmsFromApi(page: Int, category: String, callback: ApiCallback) {
-        retrofitService.getFilms(category, API.KEY, "ru-RU", page).enqueue(object : Callback<TmdbResultsDto> {
-            override fun onResponse(call: Call<TmdbResultsDto>, response: Response<TmdbResultsDto>) {
-                val list = response.body()?.tmdbFilms?.map {
-                    Film(
-                        id = it.id,
-                        title = it.title,
-                        poster = it.posterPath ?: "",
-                        description = it.overview,
-                        rating = it.voteAverage,
-                        isInFavorites = false)
-                } as List<Film>
-                repo.deleteCache(category)
-                repo.saveCache(list, category)
-                callback.onSuccess(list)
+
+    fun loadFilmsToDB(list: List<Film>, category: String) {
+        repo.deleteCache(category)
+        repo.saveCache(list, category)
+    }
+
+    fun getFilmsFromApi(page: Int, category: String): Observable<List<Film>> {
+        return retrofitService.getFilms(category, API.KEY, "ru-RU", page)
+            .subscribeOn(Schedulers.io())
+            .map {
+                Converter.convertApiListToDtoList(it.tmdbFilms)
             }
-            override fun onFailure(call: Call<TmdbResultsDto>, t: Throwable) { callback.onFailure() }
-        })
+
     }
 
     fun getFilmsFromQueryApi(page: Int, query: String): Observable<List<Film>> = retrofitService.getQuery(API.KEY, "ru-RU", query, page)

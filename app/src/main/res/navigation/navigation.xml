@@ -33,10 +33,10 @@
             app:destination="@id/detailsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/laterFragment"
-        android:name="com.pisakov.skillproj.view.fragments.LaterFragment"
+        android:id="@+id/searchFragment"
+        android:name="com.pisakov.skillproj.view.fragments.SearchFragment"
         android:label="fragment_later"
-        tools:layout="@layout/fragment_later" />
+        tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/selectionsFragment"
         android:name="com.pisakov.skillproj.view.fragments.SelectionsFragment"

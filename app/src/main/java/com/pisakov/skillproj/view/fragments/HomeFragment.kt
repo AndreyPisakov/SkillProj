@@ -5,8 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.lifecycle.*
 import androidx.navigation.findNavController
@@ -21,12 +19,7 @@ import com.pisakov.skillproj.utils.AutoDisposable
 import com.pisakov.skillproj.utils.addTo
 import com.pisakov.skillproj.viewmodel.HomeFragmentViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.ObservableOnSubscribe
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -46,8 +39,12 @@ class HomeFragment : Fragment() {
         autoDisposable.bindTo(lifecycle)
         AnimationHelper.performFragmentCircularRevealAnimation(binding.homeFragmentRoot, requireActivity(), 1)
         initRV(view)
-        search()
         eventHandling()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        filmsAdapter.submitList(viewModel.filmsDataBase)
     }
 
     private fun eventHandling() {
@@ -67,62 +64,6 @@ class HomeFragment : Fragment() {
                     viewModel.resetUpdatingState()
                 }
             }.addTo(autoDisposable)
-    }
-
-    private fun search() {
-//        binding.searchView.setOnClickListener { binding.searchView.isIconified = false }
-//        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-//            override fun onQueryTextSubmit(query: String?): Boolean = true
-//            override fun onQueryTextChange(newText: String): Boolean {
-//                if (newText.isEmpty()) {
-//                    filmsAdapter.submitList(viewModel.filmsDataBase)
-//                    return true
-//                }
-//                val result = viewModel.getFilmsFromQuery(newText)
-//                filmsAdapter.submitList(result)
-//                return true
-//            }
-//        })
-        binding.searchView.setOnClickListener { binding.searchView.isIconified = false }
-        Observable.create { subscriber ->
-            binding.searchView.setOnQueryTextListener(object :
-                SearchView.OnQueryTextListener {
-                override fun onQueryTextChange(newText: String): Boolean {
-                    //filmsAdapter.items.clear()
-                    filmsAdapter.submitList(listOf())
-                    subscriber.onNext(newText)
-                    return false
-                }
-
-                override fun onQueryTextSubmit(query: String): Boolean {
-                    subscriber.onNext(query)
-                    return false
-                }
-            })
-        }
-            .subscribeOn(Schedulers.io())
-            .map {
-                it.lowercase(Locale.getDefault()).trim()
-            }
-            .debounce(800, TimeUnit.MILLISECONDS)
-            .filter {
-                viewModel.filmsDataBase
-                it.isNotBlank()
-            }
-            .flatMap {
-                viewModel.getFilmsFromQuery(it)
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onError = {
-                    Toast.makeText(requireContext(), "Что-то пошло не так", Toast.LENGTH_SHORT).show()
-                },
-                onNext = {
-                    filmsAdapter.submitList(it)
-                }
-            )
-            .addTo(autoDisposable)
     }
 
     private fun initRV(view: View) {
