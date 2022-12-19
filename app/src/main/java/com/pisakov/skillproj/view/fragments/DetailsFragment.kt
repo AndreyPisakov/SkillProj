@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.pisakov.remote_module.entity.ApiConstants
 import com.pisakov.skillproj.R
 import com.pisakov.skillproj.databinding.FragmentDetailsBinding
-import com.pisakov.skillproj.data.ApiConstants
 import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.viewmodel.DetailsFragmentViewModel
 

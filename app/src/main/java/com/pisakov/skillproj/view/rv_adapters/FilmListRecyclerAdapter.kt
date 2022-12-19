@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.pisakov.remote_module.entity.ApiConstants
 import com.pisakov.skillproj.R
 import com.pisakov.skillproj.databinding.FilmItemBinding
-import com.pisakov.skillproj.data.ApiConstants
 import com.pisakov.skillproj.data.entity.Film
 
 class FilmListRecyclerAdapter(private val click: (film: Film) -> Unit, private val loadNewPage: () -> Unit):

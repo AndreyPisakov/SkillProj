@@ -1,6 +1,6 @@
 package com.pisakov.skillproj.utils
 
-import com.pisakov.skillproj.data.TmdbFilm
+import com.pisakov.remote_module.entity.TmdbFilm
 import com.pisakov.skillproj.data.entity.Film
 
 object Converter {

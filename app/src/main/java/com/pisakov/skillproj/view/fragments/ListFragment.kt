@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -44,7 +43,6 @@ class ListFragment : Fragment() {
         eventHandling()
         viewModel.loadList()
         initRV(view)
-        search()
     }
 
     private fun eventHandling() {
@@ -64,24 +62,6 @@ class ListFragment : Fragment() {
                     viewModel.resetUpdatingState()
                 }
             }.addTo(autoDisposable)
-    }
-
-    private fun search() {
-        binding.searchView.setOnClickListener { binding.searchView.isIconified = false }
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean = true
-            override fun onQueryTextChange(newText: String): Boolean {
-                if (newText.isEmpty()) {
-                    filmsAdapter.submitList(viewModel.filmsDataBase)
-                    return true
-                }
-                val result = viewModel.filmsDataBase.filter {
-                    it.title.lowercase(Locale.getDefault()).contains(newText.lowercase(Locale.getDefault()))
-                }
-                filmsAdapter.submitList(result)
-                return true
-            }
-        })
     }
 
     private fun initRV(view: View) {

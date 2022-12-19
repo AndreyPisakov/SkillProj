@@ -13,8 +13,8 @@
         android:title="@string/favor"
         app:showAsAction="withText"/>
     <item
-        android:id="@+id/laterFragment"
-        android:icon="@drawable/ic_time"
+        android:id="@+id/searchFragment"
+        android:icon="@drawable/ic_search"
         android:title="@string/later"
         app:showAsAction="withText"/>
     <item

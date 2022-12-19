@@ -1,4 +1,4 @@
-package com.pisakov.skillproj.data
+package com.pisakov.remote_module.entity
 
 import com.google.gson.annotations.SerializedName
 
