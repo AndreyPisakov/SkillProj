@@ -15,4 +15,7 @@
     <string name="radio_button_playing">Сейчас в кинотеатрах</string>
     <string name="radio_button_latest">Недавние</string>
     <string name="radio_group_header">Подборка на главном экране:</string>
+    <string name="notification_wathc_later">Не забудьте посмотреть!</string>
+    <string name="battary_low">Батарея разряжена</string>
+    <string name="charging_connected">Зарядка подключена</string>
 </resources>

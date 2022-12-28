@@ -1,6 +1,7 @@
 package com.pisakov.skillproj.view.fragments
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,8 @@ import com.pisakov.remote_module.entity.ApiConstants
 import com.pisakov.skillproj.R
 import com.pisakov.skillproj.databinding.FragmentDetailsBinding
 import com.pisakov.skillproj.data.entity.Film
+import com.pisakov.skillproj.notifications.NotificationConstants
+import com.pisakov.skillproj.notifications.NotificationHelper
 import com.pisakov.skillproj.viewmodel.DetailsFragmentViewModel
 
 class DetailsFragment : Fragment() {
@@ -31,7 +34,7 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentDetailsBinding.bind(view)
-        film = DetailsFragmentArgs.fromBundle(requireArguments()).film
+        film = arguments?.getParcelable(NotificationConstants.BUNDLE_KEY) ?: DetailsFragmentArgs.fromBundle(requireArguments()).film
         binding.apply {
             detailsToolbar.title = film.title
             Glide.with(view)
@@ -44,6 +47,12 @@ class DetailsFragment : Fragment() {
         isFavorite()
         addToFavorite()
         share()
+
+        binding.detailsFabWatchLater.setOnClickListener {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                NotificationHelper.createNotification(requireContext(), film)
+            }
+        }
     }
 
     private fun addToFavorite() {
