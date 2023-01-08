@@ -47,7 +47,7 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSearchBinding.bind(view)
         autoDisposable.bindTo(lifecycle)
-        AnimationHelper.performFragmentCircularRevealAnimation(binding.laterFragmentRoot, requireActivity(), 3)
+        AnimationHelper.performFragmentCircularRevealAnimation(binding.searchFragmentRoot, requireActivity(), 3)
         initRV(view)
         search()
     }
@@ -57,7 +57,7 @@ class SearchFragment : Fragment() {
             filmsAdapter = FilmListRecyclerAdapter(
                 click = { film: Film ->
                     view.findNavController()
-                        .navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(film)) },
+                        .navigate(SearchFragmentDirections.actionSearchFragmentToDetailsFragment(film)) },
                 loadNewPage = {
                     viewModel.loadNewPage(searchQuery)
                         .observeOn(AndroidSchedulers.mainThread())

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.pisakov.skillproj.R
 import com.pisakov.skillproj.databinding.FragmentSettingsBinding
-import com.pisakov.skillproj.utils.AnimationHelper
 import com.pisakov.skillproj.utils.Selections
 import com.pisakov.skillproj.viewmodel.SettingsFragmentViewModel
 
@@ -28,7 +27,6 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AnimationHelper.performFragmentCircularRevealAnimation(binding.settingsFragmentRoot, requireActivity(), 5)
         viewModel.categoryPropertyLifeData.observe(viewLifecycleOwner) {
             when (it) {
                 Selections.POPULAR_CATEGORY -> binding.radioGroup.check(R.id.radio_popular)

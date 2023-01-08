@@ -10,14 +10,11 @@ interface FilmDao {
     @Query("SELECT * FROM cached_films WHERE is_in_favorites = 1")
     fun getFavoriteCachedFilms(): Observable<List<Film>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(list: List<Film>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(film: Film)
-
-    @Query("DELETE FROM cached_films WHERE id IN (:id)")
-    fun deleteFilms(id: List<Int>)
 
     @Query("SELECT * FROM cached_films JOIN category ON cached_films.id = category.film_id AND " +
             "CASE " +
@@ -27,6 +24,9 @@ interface FilmDao {
             "WHEN :category = 4 THEN category.is_upcoming = 1 " +
             "END")
     fun getFilmsFromCategory(category : Int): Observable<List<Film>>
+
+    @Query("SELECT * FROM cached_films WHERE id IN (:id)")
+    fun getFilmFromId(id: List<Int>): Observable<List<Film>>
 
     //////////CATEGORY//////////
 

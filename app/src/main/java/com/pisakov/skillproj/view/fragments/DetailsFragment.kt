@@ -1,7 +1,6 @@
 package com.pisakov.skillproj.view.fragments
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +14,10 @@ import com.pisakov.skillproj.databinding.FragmentDetailsBinding
 import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.notifications.NotificationConstants
 import com.pisakov.skillproj.notifications.NotificationHelper
+import com.pisakov.skillproj.utils.AutoDisposable
+import com.pisakov.skillproj.utils.addTo
 import com.pisakov.skillproj.viewmodel.DetailsFragmentViewModel
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class DetailsFragment : Fragment() {
     private lateinit var binding: FragmentDetailsBinding
@@ -23,6 +25,7 @@ class DetailsFragment : Fragment() {
     private val viewModel by lazy {
         ViewModelProvider.NewInstanceFactory().create(DetailsFragmentViewModel::class.java)
     }
+    private val autoDisposable = AutoDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +38,7 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentDetailsBinding.bind(view)
         film = arguments?.getParcelable(NotificationConstants.BUNDLE_KEY) ?: DetailsFragmentArgs.fromBundle(requireArguments()).film
+        autoDisposable.bindTo(lifecycle)
         binding.apply {
             detailsToolbar.title = film.title
             Glide.with(view)
@@ -49,9 +53,11 @@ class DetailsFragment : Fragment() {
         share()
 
         binding.detailsFabWatchLater.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                NotificationHelper.createNotification(requireContext(), film)
-            }
+            NotificationHelper.notificationSet(requireContext(), film)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    viewModel.saveNotification(it)
+                }.addTo(autoDisposable)
         }
     }
 

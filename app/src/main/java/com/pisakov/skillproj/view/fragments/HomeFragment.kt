@@ -40,6 +40,10 @@ class HomeFragment : Fragment() {
         AnimationHelper.performFragmentCircularRevealAnimation(binding.homeFragmentRoot, requireActivity(), 1)
         initRV(view)
         eventHandling()
+        binding.settingsFab.setOnClickListener {
+            view.findNavController()
+                .navigate(HomeFragmentDirections.actionHomeFragmentToSettingsFragment())
+        }
     }
 
     override fun onStart() {

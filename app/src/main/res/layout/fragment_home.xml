@@ -8,7 +8,6 @@
     android:id="@+id/home_fragment_root"
     android:visibility="invisible"
     tools:visibility="visible"
-    android:padding="8dp"
     android:background="@drawable/background_main"
     tools:context=".view.fragments.HomeFragment">
 
@@ -16,7 +15,7 @@
         android:id="@+id/main_recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingTop="8dp"
+        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,5 +31,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/settings_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/purple_500"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_settings"
+        app:tint="@android:color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
