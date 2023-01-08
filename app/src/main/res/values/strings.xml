@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">SkillProj</string>
     <string name="favor">Избранное</string>
-    <string name="later">Поиск</string>
+    <string name="search">Поиск</string>
+    <string name="later">Посмотреть позже</string>
     <string name="selections">Подборки</string>
     <string name="settings">Настройки</string>
     <string name="page_title">Search it!</string>
@@ -18,4 +19,6 @@
     <string name="notification_wathc_later">Не забудьте посмотреть!</string>
     <string name="battary_low">Батарея разряжена</string>
     <string name="charging_connected">Зарядка подключена</string>
+    <string name="edit">Редактировать</string>
+    <string name="delete">Удалить</string>
 </resources>

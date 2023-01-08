@@ -5,4 +5,5 @@
     <dimen name="dimen_min_height_app_bar">60dp</dimen>
     <dimen name="dimen_rv_selections_item">100dp</dimen>
     <dimen name="dimen_progress_bar">100dp</dimen>
+    <dimen name="dimen_date_and_time_notif">30dp</dimen>
 </resources>
