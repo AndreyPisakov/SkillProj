@@ -1,13 +1,17 @@
 package com.pisakov.skillproj.notifications
 
+import android.Manifest
 import android.app.AlarmManager
 import android.app.DatePickerDialog
 import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.bundleOf
@@ -20,7 +24,7 @@ import com.pisakov.skillproj.R
 import com.pisakov.skillproj.data.entity.Film
 import com.pisakov.skillproj.data.entity.Notification
 import com.pisakov.skillproj.receivers.ReminderBroadcast
-import com.pisakov.skillproj.view.MainActivity
+import com.pisakov.skollproj.view.MainActivity
 import io.reactivex.rxjava3.core.Observable
 import java.util.*
 
@@ -49,6 +53,12 @@ object NotificationHelper {
                 override fun onLoadCleared(placeholder: Drawable?) {}
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                     builder.setStyle(NotificationCompat.BigPictureStyle().bigPicture(resource))
+                    if (ActivityCompat.checkSelfPermission(
+                            context, Manifest.permission.POST_NOTIFICATIONS
+                        ) != PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(context, "Без разрешения никак :(", Toast.LENGTH_SHORT).show()
+                        return
+                    }
                     notificationManager.notify(film.id, builder.build())
                 }
             })
