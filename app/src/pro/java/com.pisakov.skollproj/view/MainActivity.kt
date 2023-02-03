@@ -1,17 +1,17 @@
-package com.pisakov.skillproj.view
+package com.pisakov.skollproj.view
 
 import android.content.BroadcastReceiver
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.pisakov.skillproj.R
 import com.pisakov.skillproj.databinding.ActivityMainBinding
 import com.pisakov.skillproj.receivers.ConnectionChecker
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(){
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var receiver: BroadcastReceiver
