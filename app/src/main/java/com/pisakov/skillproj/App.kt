@@ -14,6 +14,7 @@ import com.pisakov.skillproj.notifications.NotificationConstants.CHANNEL_ID
 class App : Application() {
     lateinit var dagger: AppComponent
 
+    var isPromoShown = false
     override fun onCreate() {
         super.onCreate()
         instance = this

@@ -5,9 +5,13 @@ import android.content.BroadcastReceiver
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.pisakov.skillproj.App
 import com.pisakov.skillproj.R
 import com.pisakov.skillproj.databinding.ActivityMainBinding
 import com.pisakov.skillproj.receivers.ConnectionChecker
@@ -32,6 +36,38 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, filters)
 
         initNavigation()
+        promo()
+    }
+
+    private fun promo() {
+        if (!App.instance.isPromoShown) {
+            val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+            val configSettings = FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(0)
+                .build()
+            firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
+            firebaseRemoteConfig.fetch()
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        firebaseRemoteConfig.activate()
+                        val filmLink = firebaseRemoteConfig.getString("film_link")
+                        if (filmLink.isNotBlank()) {
+                            App.instance.isPromoShown = true
+                            binding.promoViewGroup.apply {
+                                visibility = View.VISIBLE
+                                animate()
+                                    .setDuration(1500)
+                                    .alpha(1f)
+                                    .start()
+                                setLinkForPoster(filmLink)
+                                watchButton.setOnClickListener {
+                                    visibility = View.GONE
+                                }
+                            }
+                        }
+                    }
+                }
+        }
     }
 
     override fun onDestroy() {

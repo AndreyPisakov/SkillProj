@@ -6,4 +6,6 @@
     <dimen name="dimen_rv_selections_item">100dp</dimen>
     <dimen name="dimen_progress_bar">100dp</dimen>
     <dimen name="dimen_date_and_time_notif">30dp</dimen>
+    <dimen name="dimen_padding_image_view">15dp</dimen>
+    <dimen name="dimen_margin_top_textview">36dp</dimen>
 </resources>
