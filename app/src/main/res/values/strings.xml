@@ -21,4 +21,6 @@
     <string name="charging_connected">Зарядка подключена</string>
     <string name="edit">Редактировать</string>
     <string name="delete">Удалить</string>
+    <string name="watch">Смотреть</string>
+    <string name="watch_film">Посмотрите фильм:</string>
 </resources>

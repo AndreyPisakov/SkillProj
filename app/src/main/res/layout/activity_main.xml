@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_for_main_activity"
-    tools:context=".view.MainActivity">
+    android:background="@drawable/background_for_main_activity">
 
     <fragment
         android:id="@+id/myNavHostFragment"
@@ -30,5 +28,13 @@
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/navigation_menu" />
+
+    <com.pisakov.skillproj.view.customViews.PromoView
+        android:id="@+id/promo_view_group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:translationZ="10dp"
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
