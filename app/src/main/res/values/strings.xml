@@ -1,10 +1,26 @@
 <resources>
     <string name="app_name">SkillProj</string>
-    <string name="menu">Меню</string>
-    <string name="favor">избранное</string>
-    <string name="later">посмотреть позже</string>
-    <string name="selections">подборки</string>
-    <string name="settings">настройки</string>
-    <string name="disclaimer">Картинки взяты с pexels.com</string>
+    <string name="favor">Избранное</string>
+    <string name="search">Поиск</string>
+    <string name="later">Посмотреть позже</string>
+    <string name="selections">Подборки</string>
+    <string name="settings">Настройки</string>
     <string name="page_title">Search it!</string>
+
+    <string name="home">Главная</string>
+
+    <string name="menu_settings_title_text">Настройки</string>
+    <string name="radio_button_popular">Популярные</string>
+    <string name="radio_button_top_rated">С высоким рейтингом</string>
+    <string name="radio_button_upcoming">Скоро в кинотеатрах</string>
+    <string name="radio_button_playing">Сейчас в кинотеатрах</string>
+    <string name="radio_button_latest">Недавние</string>
+    <string name="radio_group_header">Подборка на главном экране:</string>
+    <string name="notification_wathc_later">Не забудьте посмотреть!</string>
+    <string name="battary_low">Батарея разряжена</string>
+    <string name="charging_connected">Зарядка подключена</string>
+    <string name="edit">Редактировать</string>
+    <string name="delete">Удалить</string>
+    <string name="watch">Смотреть</string>
+    <string name="watch_film">Посмотрите фильм:</string>
 </resources>
